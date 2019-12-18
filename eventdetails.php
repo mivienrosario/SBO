@@ -100,19 +100,18 @@
           <p><?php echo $desc; ?></p>
           <hr>
           <div class="w3-row">
-            <div class="w3-col m2">
-              <h5 class="w3-opacity"><b>Attendance</b></h5>
-            </div>
-
-            <!--
+            <div class="w3-col m5" style="display: flex;">
+              <h5 class="w3-opacity" style="padding: 5px;"><b>Attendance</b></h5>
+			  <!--
               check if user != student & officer
               display attendance table
             -->
             <?php if ($_SESSION['utype'] != 4&3): ?>
-              <div class="w3-col m2">
                 <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn "><i class="fas fa-calendar-week"></i></button>
-              </div>
             <?php endif; ?>
+            </div>
+
+            
 
 
 

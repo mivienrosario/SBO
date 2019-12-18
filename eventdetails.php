@@ -135,7 +135,7 @@
           check if user != student
           display attendance table
         -->
-        <?php if (($_SESSION['utype'] != 4) || ($_SESSION['utype'] != 3)): ?>
+        <?php if (($_SESSION['utype'] != 4) & ($_SESSION['utype'] != 3)): ?>
           <div class="w3-col w3-right-align">
             <button onclick="document.getElementById('addAttendance').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round"><i class="fas fa-calendar-week"></i>   Add Attendance</button>
           </div>
@@ -341,7 +341,7 @@
                     <th>PM Sign Out</th>
                     </tr>
                   </thead>
-                <tbody>';
+                <tbody class="w3-white">';
                 $sId = $_SESSION['uid'];
                 $stSql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
                           JOIN sbo.attendance a

@@ -129,14 +129,14 @@
                       if($resultCheck2 > 0) {
                         while ($row2 = mysqli_fetch_assoc($result2)) {
                           echo '<tr class="w3-white">';
-                          echo '<td><a href="student_profile.php?id='. $row2['student_id'].'">';
-                          echo $row2['student_id']. '</a></td>';
+                          echo '<td><a href="profile.php?id='.$row2['student_id'].'">';
+                          echo $row2['student_id'].'</a></td>';
                           echo '<td>'. $row2['name'] .'</td>';
                           echo '<td class="w3-center">'. $row2['year_section'] . '</td>';
                           echo '<td class="w3-center">';
                           ?>
                           <?php if ($_SESSION['utype'] != 4&3): ?>
-                            <button class="w3-btn w3-blue w3-round"><i class="fas fa-edit"></i> <a href="profile.php?id= <?php echo $row2['student_id']; ?>" style="text-decoration: none;">Edit</a>  </button>
+                            <button class="w3-btn w3-blue w3-round"><i class="fas fa-edit"></i> <a href="profile.php?id=<?php echo $row2['student_id']; ?>" style="text-decoration: none;">Edit</a>  </button>
                             <button class="w3-btn w3-blue w3-round"><i class="fas fa-eye"></i>   View</button>
                           <?php endif; ?>
                           <?php

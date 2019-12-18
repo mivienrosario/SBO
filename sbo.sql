@@ -299,7 +299,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('$2y$10$hJCluTgNBk2nfjVwUQ/aj.oLS8GlBlFm1AHG1UdYEuKcrmmKSrBui','131-4578-1',4,'student'),('$2y$10$PqwqG3BsNXxCFA24znE9f.DeyTXkO/dqemO7l/aS3EndWjTj/q/TC','171-0192-2',3,'officer');
+INSERT INTO `user` VALUES ('$2y$10$hJCluTgNBk2nfjVwUQ/aj.oLS8GlBlFm1AHG1UdYEuKcrmmKSrBui','131-4578-1',4,'student'),('$2y$10$PqwqG3BsNXxCFA24znE9f.DeyTXkO/dqemO7l/aS3EndWjTj/q/TC','171-0135-2',3,'officer'),('$2y$10$xcW9/INnFuYsXgOXOaGWvOWBy7jPfgSYF8BFR4dKeQuvkEtbUYJn.','171-0192-2',1,'admin');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -336,4 +336,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-19  5:21:40
+-- Dump completed on 2019-12-19  5:35:20

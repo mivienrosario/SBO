@@ -109,20 +109,25 @@
         <div class="w3-modal-content w3-animate-zoom w3-padding-large">
         <div class="w3-container w3-white w3-center">
           <i onclick="document.getElementById('addEvent').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
-          <span onclick="document.getElementById('addEvent').style.display='none'"
-            class="w3-button w3-display-topright">&times;</span>
+
+		  <div class="w3-blue">
           <h2 class="w3-wide">ADD NEW EVENT</h2>
+		  </div>
           <p>Please provide the necessary information type to start monitoring the attendance.</p>
 
             <form class="" action="inc/insert.inc.php" method="post">
                 <p><input class="w3-input w3-border" type="hidden" value="<?php echo $id;?>" ></p>
                 <p> AM <input type="checkbox" class="w3-check" name="" value=""> PM <input type="checkbox" class="w3-check" name="" value=""> </p>
-                <p><h5>AM Sign In</h5></p>
-
-        </div>
+				<p>Event Title: <input type="text" class="w3-border" name="" value=""></p>
+				<p>Description: <textarea rows="4" col="40" class="" name="" ></textarea></p>
+				<p>Start Date: <input type="date" class="w3-border" name="" value=""></p>
+				<p>End Date: <input type="date" class="w3-border" name="" value=""></p>
+				
         <div class="w3-container w3-white w3-right">
-          <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('addEvent').style.display='none'" name="addEvent">Save</button>
+          <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round " onclick="document.getElementById('addEvent').style.display='none'" name="addEvent">Save</button>
         </div>
+        </div>
+
         </form>
         </div>
       </div>

@@ -58,6 +58,7 @@
       }
     ?>
 
+
     <!-- Sidebar/menu -->
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
       <div class="w3-container w3-row">
@@ -90,6 +91,38 @@
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <!-- Header -->
+	  <style>
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li+li:before {
+		padding: 8px;
+		color: black;
+		content: "/\00a0";
+		}
+		ul.breadcrumb li a {
+		color: #0275d8;
+		text-decoration: none;
+		}
+		ul.breadcrumb li a:hover {
+		color: black;
+		text-decoration: underline;
+		}
+		</style>
+
+	  	<div class="container">                 
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item"><a href="event.php">Events</a></li>
+			<li class="breadcrumb-item"><a href="eventdetails.php">Event Details</a></li>
+			<li class="breadcrumb-item">Survey</li>
+			
+  </ul>
+</div>
      
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">

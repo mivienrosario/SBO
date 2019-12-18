@@ -91,7 +91,34 @@
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <!-- Header -->
       <header class="w3-container" style="padding-top:22px">
-        <h5><b><i class="fas fa-calendar-week"></i> Events</b></h5>
+			  <style>
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li+li:before {
+		padding: 8px;
+		color: black;
+		content: "/\00a0";
+		}
+		ul.breadcrumb li a {
+		color: #0275d8;
+		text-decoration: none;
+		}
+		</style>
+
+	  	<div class="container">                 
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item"><a href="event.php">Events</a></li>
+			<li class="breadcrumb-item">Event Details</li>
+			
+			
+  </ul>
+</div>
       </header> <!-- Header -->
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">

@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8">
     <title>SBO System - Log in</title>
-    <link rel="stylesheet" href="">
     <link rel="stylesheet" href="src/css/main.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   </head>

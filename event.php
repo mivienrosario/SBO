@@ -42,13 +42,16 @@
       </div>
       <hr>
       <div class="w3-container">
-        <h5>Dashboard</h5>
+        <h5>Event List</h5>
       </div>
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-        <a href="test_event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i></i>  Events</a>
-        <a href="test_student_list.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i></i>  Events</a>
+        <?php if ($_SESSION['utype'] != 4): ?>
+          <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
+          <a href="section" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <?php endif; ?>
+
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
     </nav> <!-- Sidebar/menu -->
@@ -65,10 +68,11 @@
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <h2 class="w3-text-grey w3-padding-16"><i class="fas fa-list fa-fw w3-margin-right w3-xxlarge w3-text-blue"></i>Events List</h2>
+
+        <!-- show if admin/attendance officer-->
         <?php if (($_SESSION['utype'] == 1) || ($_SESSION['utype'] == 2)): ?>
           <button onclick="document.getElementById('addEvent').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round">Add New Event</button>
         <?php endif; ?>
-
 
         <?php
           $sql = "SELECT * FROM sbo.events";
@@ -83,7 +87,7 @@
               $id = $row['event_id'];
 
               echo '<div class="w3-container">';
-              echo '<h5 class="w3-opacity w3-text-blue"><b><a href="test_event_details.php?id='. $id .'">'; echo $title; echo '</a></b></h5>';
+              echo '<h5 class="w3-opacity w3-text-blue"><b><a href="eventdetails.php?id='. $id .'">'; echo $title; echo '</a></b></h5>';
               echo '<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>'; echo $start . ' - ' . $end . '</h6>';
               echo '<p>' . $desc . '</p>';
               echo '</div>';

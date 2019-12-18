@@ -100,7 +100,7 @@ CREATE TABLE `section` (
 
 LOCK TABLES `section` WRITE;
 /*!40000 ALTER TABLE `section` DISABLE KEYS */;
-INSERT INTO `section` VALUES (1,'','','',''),(2,'2','A','2019-2020','First Semester'),(3,'3','A','2019-2020','First Semester');
+INSERT INTO `section` VALUES (1,NULL,NULL,NULL,NULL),(2,'2','A','2019-2020','First Semester'),(3,'3','A','2019-2020','First Semester');
 /*!40000 ALTER TABLE `section` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,7 +162,7 @@ CREATE TABLE `student_attendance` (
 
 LOCK TABLES `student_attendance` WRITE;
 /*!40000 ALTER TABLE `student_attendance` DISABLE KEYS */;
-INSERT INTO `student_attendance` VALUES (1,'171-0192-2','08:00:00','11:30:00','01:00:00','4:30'),(2,'171-0192-2','03:00:00',NULL,NULL,NULL);
+INSERT INTO `student_attendance` VALUES (1,'131-4578-1',NULL,NULL,NULL,NULL),(1,'171-0192-2','08:00:00','11:30:00','01:00:00',NULL),(2,'171-0192-2','03:00:00',NULL,'10:13:00','23:18');
 /*!40000 ALTER TABLE `student_attendance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,7 +192,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('$2y$10$sxo/uCzoE2vXAyMR7ZdIjeSWvdZQtYKXIonPh2IX1kOHOXDoGUbNq','171-0192-2',1,'root');
+INSERT INTO `user` VALUES ('$2y$10$hJCluTgNBk2nfjVwUQ/aj.oLS8GlBlFm1AHG1UdYEuKcrmmKSrBui','131-4578-1',4,'student'),('$2y$10$sxo/uCzoE2vXAyMR7ZdIjeSWvdZQtYKXIonPh2IX1kOHOXDoGUbNq','171-0192-2',1,'root');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,4 +229,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-17 17:10:18
+-- Dump completed on 2019-12-18 12:22:11

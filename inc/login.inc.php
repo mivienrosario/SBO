@@ -38,7 +38,7 @@ if (isset($_POST['login'])) {
           //root = 1, attendance officer = 2, officer = 3, student = 4;
           $_SESSION['utype'] = $row['type_id'];
 
-          header("Location: ../test_event.php?login=success");
+          header("Location: ../event.php?login=success");
           exit();
         }
       }

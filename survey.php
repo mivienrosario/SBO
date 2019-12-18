@@ -5,30 +5,21 @@
     header("Location: test_event.php?error=id");
     exit();
   } else {
-    $id = $_GET['id'];
-    $sql = "SELECT * FROM sbo.events WHERE event_id = $id;";
-    $result = mysqli_query($conn, $sql);
-    $resultCheck = mysqli_num_rows($result);
-
-    if ($resultCheck > 0) {
-      while ($row = mysqli_fetch_assoc($result)) {
-        $title = $row['title'];
-        $dateSt = $row['start_date'];
-        $dateEnd = $row['end_date'];
-        $desc = $row['description'];
-      }
-    } else if(empty($resultCheck)) {
-      echo 'No results found.<br>';
+		  $sql = "SELECT * FROM sbo.events WHERE event_id = $id;";	  
+			$result = mysqli_query($conn, $sql);
+          $resultCheck = mysqli_num_rows($result);
+          if ($resultCheck > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+              $start = date('M d Y', strtotime($row['start_date']));
+              $end = date('M d Y', strtotime($row['end_date']));
+              $title = $row['title'];
+              $desc = $row['description'];
+              $id = $row['event_id'];
+			}
     }
-
-    $today = date('Y-m-d');
-    date_default_timezone_set('Asia/Singapore');
-    $currentTime = strtotime(date('H:i'));
-    $getTime = date("H:i");
   }
 ?>
 <!DOCTYPE html>
-
 <html lang="en" dir="ltr">
   <head>
     <title>W3.CSS Template</title>
@@ -38,7 +29,6 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
-	<link rel="stylesheet" href="master.css">
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
     <style>
       html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -91,20 +81,18 @@
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <!-- Header -->
       <header class="w3-container" style="padding-top:22px">
-        <h5><b><i class="fas fa-calendar-week"></i> Events</b></h5>
+        <h5><b><i class="fas fa-poll"></i> Survey</b></h5>
       </header> <!-- Header -->
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">
-          <h5 class=""><b><?php echo $title; ?></b><a href="survey.php"><input type="submit" class="w3-btn w3-blue w3-round w3-right" name="" value="Add Survey"></a></h5>		 
-		  <br>
+          <h5 class="w3-opacity"><b><?php echo $title; ?></b></h5>
           <p><?php echo $desc; ?></p>
           <hr>
           <div class="w3-row">
             <div class="w3-col m2">
               <h5 class="w3-opacity"><b>Attendance</b></h5>
             </div>
-
 
             <!--
               check if user != student & officer

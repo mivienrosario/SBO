@@ -169,7 +169,7 @@
 
                     $result2 = mysqli_query($conn, $sql2);
                     $resultCheck2 = mysqli_num_rows($result2);
-                    echo '<table id="table1" class="display">
+                    echo '<table id="'; echo $table[0]; echo '" class="display">
                         <thead>
                           <th>Student ID</th>
                           <th>Name</th>
@@ -287,6 +287,8 @@
                       } //end loop
                     } //end resultcheck
                     echo '</tbody></table>';
+                    echo '<br>';
+                    $table++;
                   } //end loop
                 } //end resultcheck
               } else {

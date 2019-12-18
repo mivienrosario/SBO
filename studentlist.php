@@ -75,6 +75,16 @@
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">
+          <!--
+            check if user != student
+            display attendance table
+          -->
+          <?php if ($_SESSION['utype'] != 4): ?>
+            <div class="w3-col m2">
+              <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round">Register Student</button>
+            </div>
+          <?php endif; ?>
+
           <!-- student table -->
           <table id="table" class="display">
             <thead>
@@ -119,6 +129,61 @@
           </table> <!-- student table -->
         </div>
       </div>
+
+      <?php if ($_SESSION['utype'] != 4): ?>
+        <!-- modal -->
+        <div id="subscribe" class="w3-modal">
+          <div class="w3-modal-content w3-animate-zoom w3-padding-large">
+          <div class="w3-container w3-white w3-center">
+            <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
+
+            <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
+            <p>Please provide the necessary information type to start monitoring the attendance.</p>
+
+              <form class="" action="inc/insert.inc.php" method="post">
+                  <p><input class="w3-input w3-border" type="hidden" value="<?php echo $id;?>" ></p>
+                  <p> AM <input type="checkbox" class="w3-check" name="" value=""> PM <input type="checkbox" class="w3-check" name="" value=""> </p>
+
+					<div class="w3-container">
+					<div class="w3-row w3-large">
+					  <div class="w3-col s6">
+						<p><h5>AM Sign In</h5></p>
+						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+
+					  <div class="w3-col s6">
+						 <p><h5>AM Sign Out</h5></p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+					</div>
+
+					  <div class="w3-row w3-large">
+					  <div class="w3-col s6">
+						<p><h5>PM Sign In</h5></p>
+						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+
+					  <div class="w3-col s6">
+						 <p><h5>PM Sign Out</h5></p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+					</div>
+					</div>
+		  <div class="w3-container w3-white w3-right">
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
+          </div>
+          </div>
+
+          </form>
+          </div>
+        </div>
+
+        <!-- modal -->
+      <?php endif; ?>
 
 
       <!-- content here -->

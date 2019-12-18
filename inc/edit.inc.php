@@ -25,6 +25,7 @@
 
   }
 
+  //mark attendance of a student
   if (isset($_POST['new-attendance'])) {
     $time = date('H:i', strtotime($_POST['time']));
     $sId = $_POST['sId'];
@@ -42,5 +43,17 @@
       echo mysqli_error($conn);
       echo $eId;
     }
+  }
 
+  if (isset($_POST['addAttendance'])) {
+    $setDate = $_POST['setDate'];
+    //$var attendance type
+    $inStartAM = date('H:i', $_POST['inStartAM']);
+    $inStartAM = date('H:i', $_POST['inEndAM']);
+    $inStartAM = date('H:i', $_POST['outStartAM']);
+    $inStartAM = date('H:i', $_POST['outEndAM']);
+    $inStartAM = date('H:i', $_POST['inStartPM']);
+    $inStartAM = date('H:i', $_POST['inEndPM']);
+    $inStartAM = date('H:i', $_POST['outStartPM']);
+    $inStartAM = date('H:i', $_POST['outEndPM']);
   }

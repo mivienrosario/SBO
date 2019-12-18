@@ -125,6 +125,7 @@
             <?php
               if ($_SESSION['utype'] != 4) {
                 $table = array("table1", "table2", "table3", "table4", "table5");
+                $index = 0;
 
                 $sql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
                           JOIN sbo.attendance a
@@ -136,6 +137,7 @@
                 $resultCheck = mysqli_num_rows($result);
                 if ($resultCheck > 0) {
                   while ($row = mysqli_fetch_assoc($result)) {
+
                     $date = $row['date'];
                     $sql2 = "SELECT
                                   concat(s.last_name, ', ', s.first_name) as name,
@@ -169,7 +171,8 @@
 
                     $result2 = mysqli_query($conn, $sql2);
                     $resultCheck2 = mysqli_num_rows($result2);
-                    echo '<table id="'; echo $table[0]; echo '" class="display">
+                    echo '<h2>' . $date. '</h2>';
+                    echo '<table id="'; echo $table[$index]; echo '" class="display">
                         <thead>
                           <th>Student ID</th>
                           <th>Name</th>
@@ -288,7 +291,7 @@
                     } //end resultcheck
                     echo '</tbody></table>';
                     echo '<br>';
-                    $table++;
+                    $index++;
                   } //end loop
                 } //end resultcheck
               } else {
@@ -401,40 +404,42 @@
             <p>Please provide the necessary information type to start monitoring the attendance.</p>
 
               <form class="" action="inc/insert.inc.php" method="post">
-                  <p><input class="w3-input w3-border" type="hidden" value="<?php echo $id;?>" ></p>
-                  <p> AM <input type="checkbox" class="w3-check" name="" value=""> PM <input type="checkbox" class="w3-check" name="" value=""> </p>
+
+                  <p><input class="w3-input w3-border" type="hidden" name="eventId" value="<?php echo $id;?>" ></p>
+                  <p>Select Date <input class="w3-input" type="date" name="setDate" ></p>
+                  <p> AM <input type="checkbox" class="w3-check" name="setAM"> PM <input type="checkbox" class="w3-check" name="setPM"> </p>
 
 					<div class="w3-container">
 					<div class="w3-row w3-large">
 					  <div class="w3-col s6">
 						<p><h5>AM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> Start <input class="w3-input w3-border" type="time" name="inStartAM" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="inEndAM" value=""> </p>
 					  </div>
 
 					  <div class="w3-col s6">
 						 <p><h5>AM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="outStartAM" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="outEndAM" value=""> </p>
 					  </div>
 					</div>
 
 					  <div class="w3-row w3-large">
 					  <div class="w3-col s6">
 						<p><h5>PM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> Start <input class="w3-input w3-border" type="time" name="inStartPM" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="inEndPM" value=""> </p>
 					  </div>
 
 					  <div class="w3-col s6">
 						 <p><h5>PM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="outStartPM" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="outEndPM" value=""> </p>
 					  </div>
 					</div>
 					</div>
 		  <div class="w3-container w3-white w3-right">
-            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="add-attendance">Save</button>
           </div>
           </div>
 

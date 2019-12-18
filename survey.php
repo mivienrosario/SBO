@@ -1,31 +1,9 @@
 <?php
   require_once 'inc/db.inc.php';
-  $id = NULL;
-  if (!isset($_GET)) {
-    header("Location: test_event.php?error=id");
-    exit();
-  } else {
-    $id = $_GET['id'];
-    $sql = "SELECT * FROM sbo.events WHERE event_id = $id;";
-    $result = mysqli_query($conn, $sql);
-    $resultCheck = mysqli_num_rows($result);
-
-    if ($resultCheck > 0) {
-      while ($row = mysqli_fetch_assoc($result)) {
-        $title = $row['title'];
-        $dateSt = $row['start_date'];
-        $dateEnd = $row['end_date'];
-        $desc = $row['description'];
-      }
-    } else if(empty($resultCheck)) {
-      echo 'No results found.<br>';
-    }
-
     $today = date('Y-m-d');
     date_default_timezone_set('Asia/Singapore');
     $currentTime = strtotime(date('H:i'));
     $getTime = date("H:i");
-  }
 ?>
 <!DOCTYPE html>
 
@@ -115,18 +93,18 @@
 		}
 		</style>
 
-	  	<div class="container">                 
+	  	<div class="container">
 		<ul class="breadcrumb">
 			<li class="breadcrumb-item"><a href="event.php">Events</a></li>
 			<li class="breadcrumb-item"><a href="eventdetails.php">Event Details</a></li>
 			<li class="breadcrumb-item">Survey</li>
-			
+
   </ul>
 </div>
-     
+
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">
-          <h5 class=""><b><?php echo $title; ?></h5>	
+          <h5 class=""><b>Survey Title</h5>
 		  <p><button class="w3-button w3-blue" onclick="document.getElementById('addQuestion').style.display='block'">Add Question</button></p>
 			<p><button class="w3-button w3-blue" onclick="document.getElementById('addOption').style.display='block'">Add Option</button></p>
 
@@ -135,15 +113,15 @@
 				  <i onclick="document.getElementById('addQuestion').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
 					<div class="w3-container w3-white w3-center">
 					  <h3 class="w3-wide">Add Question</h3>
-					  <p><textarea rows="3" cols="110" class="w3-padding-small" name="" placeholder="Type here..." "></textarea></p>
+					  <p><textarea rows="3" cols="110" class="w3-padding-small" name="" placeholder="Type here..."></textarea></p>
 					  <button type="button" class="w3-button w3-padding-large w3-blue w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Submit</button>
 					  <button type="button" class="w3-button w3-padding-large w3-red w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Cancel</button>
 					</div>
 				  </div>
 				</div>
-				
-				
-		  
+
+
+
 				<div id="addOption" class="w3-modal">
 				  <div class="w3-modal-content w3-animate-zoom">
 				  <i onclick="document.getElementById('addOption').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
@@ -157,13 +135,13 @@
 					</div>
 				  </div>
 				</div>
-		  
-				
-				
+
+
+
           </div>
       <?php if ($_SESSION['utype'] != 4): ?>
         <!-- modal -->
-       
+
       <?php endif; ?>
 
 

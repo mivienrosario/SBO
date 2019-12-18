@@ -93,12 +93,43 @@
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <!-- Header -->
       <header class="w3-container" style="padding-top:22px">
-        <h5><b><i class="fas fa-calendar-week"></i> Events</b></h5>
+			  <style>
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li+li:before {
+		padding: 8px;
+		color: black;
+		content: "/\00a0";
+		}
+		ul.breadcrumb li a {
+		color: #0275d8;
+		text-decoration: none;
+		}
+		</style>
+
+	  	<div class="container">
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item"><a href="event.php">Events</a></li>
+			<li class="breadcrumb-item">Event Details</li>
+
+
+  </ul>
+</div>
       </header> <!-- Header -->
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">
+<<<<<<< HEAD
           <h5 class=""><b><?php echo $title; ?></b><a href="survey.php"><input type="submit" class="w3-btn w3-blue w3-round w3-right" name="" value="Add Survey"></a></h5>		 
+=======
+          <h5 class=""><b><?php echo $title; ?></b><a href="survey.php?id=<?php echo $id; ?>"><input type="submit" class="w3-btn w3-blue w3-round w3-right" name="" value="Go to Survey"></a></h5>
+>>>>>>> master
 		  <br>
           <p><?php echo $desc; ?></p>
           <hr>
@@ -126,9 +157,11 @@
             check if user != student
             display attendance table
           -->
+          <?php if ($_SESSION['utype'] != 4):  ?>
             <?php
               if ($_SESSION['utype'] != 4) {
                 $table = array("table1", "table2", "table3", "table4", "table5");
+                $index = 0;
 
                 $sql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
                           JOIN sbo.attendance a
@@ -140,6 +173,7 @@
                 $resultCheck = mysqli_num_rows($result);
                 if ($resultCheck > 0) {
                   while ($row = mysqli_fetch_assoc($result)) {
+
                     $date = $row['date'];
                     $sql2 = "SELECT
                                   concat(s.last_name, ', ', s.first_name) as name,
@@ -173,7 +207,8 @@
 
                     $result2 = mysqli_query($conn, $sql2);
                     $resultCheck2 = mysqli_num_rows($result2);
-                    echo '<table id="'; echo $table[0]; echo '" class="display">
+                    echo '<h2>' . $date. '</h2>';
+                    echo '<table id="'; echo $table[$index]; echo '" class="display">
                         <thead>
                           <th>Student ID</th>
                           <th>Name</th>
@@ -267,32 +302,13 @@
                           echo '<td class="dt-center">Absent</td>';
                         }
 
-                        //check if student has signed in
-                        if (($row2['pm_out'] == NULL) && (($currentTime > $pm_outstart) && ($currentTime < $pm_outend))) {
-                          echo '<td class="dt-center">';
-                          echo '<form action="inc/edit.inc.php" method="POST">
-                                  <input type="hidden" name="eId" value="'.$id.'">
-                                  <input type="hidden" name="sId" value="'.$sId.'">
-                                  <input type="hidden" name="aId" value="'.$attId.'">
-                                  <input type="hidden" name="type" value="'.$pm_out.'">
-                                  <input type="hidden" name="time" value="'.$getTime.'">
-                                  <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
-                                </form>';
-                          echo '</td>';
-
-                        } elseif ($row2['pm_out'] != NULL) {
-                            echo '<td class="dt-center">'.$row2['pm_out'].'</td>';
-                        } else {
-                          echo '<td class="dt-center">Absent</td>';
-                        }
-
-                        echo '</tr>';
+                      echo '</tr>';
 
                       } //end loop
                     } //end resultcheck
                     echo '</tbody></table>';
                     echo '<br>';
-                    $table++;
+                    $index++;
                   } //end loop
                 } //end resultcheck
               } else {
@@ -377,16 +393,19 @@
                             echo '</tr>';
 
 
-                          } //end inner populate array loop
-                        } //end inner result check for student view
-                      } //end inner check connection for student view
-                    } //end populate array loop for  student view
-                  } //end check result for student view
-                } //end chceck connection for student view
-                echo '</tbody>
-              </table>';
-              } //for students view
-              ?>
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+            ?>
+              </tbody>
+            </table>
+          <?php endif; //display if user != student ?>
+
+
+
         </div>
       </div>
 
@@ -401,15 +420,21 @@
           <div class="w3-container w3-white w3-center">
             <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <span onclick="document.getElementById('subscribe').style.display='none'"
               class="w3-button w3-display-topright">&times;</span>
 =======
 
 >>>>>>> master
+=======
+            <span onclick="document.getElementById('subscribe').style.display='none'"
+              class="w3-button w3-display-topright">&times;</span>
+>>>>>>> master
             <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
             <p>Please provide the necessary information type to start monitoring the attendance.</p>
 
               <form class="" action="inc/insert.inc.php" method="post">
+<<<<<<< HEAD
                   <p><input class="w3-input w3-border" type="hidden" value="<?php echo $id;?>" ></p>
                   <p> AM <input type="checkbox" class="w3-check" name="" value=""> PM <input type="checkbox" class="w3-check" name="" value=""> </p>
 <<<<<<< HEAD
@@ -427,46 +452,59 @@
                   <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
 
 =======
+=======
+
+                  <p><input class="w3-input w3-border" type="hidden" name="eventId" value="<?php echo $id;?>" ></p>
+                  <p>Select Date <input class="w3-input" type="date" name="setDate" ></p>
+                  <p> AM <input type="checkbox" class="w3-check" name="setAM"> PM <input type="checkbox" class="w3-check" name="setPM"> </p>
+>>>>>>> master
 
 					<div class="w3-container">
 					<div class="w3-row w3-large">
 					  <div class="w3-col s6">
 						<p><h5>AM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> Start <input class="w3-input w3-border" type="time" name="inStartAM" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="inEndAM" value=""> </p>
 					  </div>
 
 					  <div class="w3-col s6">
 						 <p><h5>AM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="outStartAM" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="outEndAM" value=""> </p>
 					  </div>
 					</div>
 
 					  <div class="w3-row w3-large">
 					  <div class="w3-col s6">
 						<p><h5>PM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> Start <input class="w3-input w3-border" type="time" name="inStartPM" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="inEndPM" value=""> </p>
 					  </div>
 
 					  <div class="w3-col s6">
 						 <p><h5>PM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="outStartPM" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="outEndPM" value=""> </p>
 					  </div>
 					</div>
 					</div>
 		  <div class="w3-container w3-white w3-right">
+<<<<<<< HEAD
             <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
+>>>>>>> master
+=======
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="add-attendance">Save</button>
 >>>>>>> master
           </div>
           <div class="w3-container w3-white w3-right">
             <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
           </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
+>>>>>>> master
+=======
 >>>>>>> master
           </form>
           </div>

@@ -1,5 +1,6 @@
 <?php
   require_once 'inc/db.inc.php';
+<<<<<<< HEAD
   $id = NULL;
   if (!isset($_GET)) {
     header("Location: test_event.php?error=id");
@@ -20,6 +21,15 @@
   }
 ?>
 <!DOCTYPE html>
+=======
+    $today = date('Y-m-d');
+    date_default_timezone_set('Asia/Singapore');
+    $currentTime = strtotime(date('H:i'));
+    $getTime = date("H:i");
+?>
+<!DOCTYPE html>
+
+>>>>>>> master
 <html lang="en" dir="ltr">
   <head>
     <title>W3.CSS Template</title>
@@ -29,6 +39,10 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
+<<<<<<< HEAD
+=======
+	<link rel="stylesheet" href="master.css">
+>>>>>>> master
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
     <style>
       html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -48,6 +62,10 @@
       }
     ?>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     <!-- Sidebar/menu -->
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
       <div class="w3-container w3-row">
@@ -80,6 +98,7 @@
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <!-- Header -->
+<<<<<<< HEAD
       <header class="w3-container" style="padding-top:22px">
         <h5><b><i class="fas fa-poll"></i> Survey</b></h5>
       </header> <!-- Header -->
@@ -103,10 +122,79 @@
                 <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn "><i class="fas fa-calendar-week"></i></button>
               </div>
             <?php endif; ?>
+=======
+	  <style>
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li+li:before {
+		padding: 8px;
+		color: black;
+		content: "/\00a0";
+		}
+		ul.breadcrumb li a {
+		color: #0275d8;
+		text-decoration: none;
+		}
+		ul.breadcrumb li a:hover {
+		color: black;
+		text-decoration: underline;
+		}
+		</style>
+
+	  	<div class="container">
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item"><a href="event.php">Events</a></li>
+			<li class="breadcrumb-item"><a href="eventdetails.php">Event Details</a></li>
+			<li class="breadcrumb-item">Survey</li>
+
+  </ul>
+</div>
+
+      <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
+        <div class="w3-container">
+          <h5 class=""><b>Survey Title</h5>
+		  <p><button class="w3-button w3-blue" onclick="document.getElementById('addQuestion').style.display='block'">Add Question</button></p>
+			<p><button class="w3-button w3-blue" onclick="document.getElementById('addOption').style.display='block'">Add Option</button></p>
+
+				<div id="addQuestion" class="w3-modal">
+				  <div class="w3-modal-content w3-animate-zoom">
+				  <i onclick="document.getElementById('addQuestion').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
+					<div class="w3-container w3-white w3-center">
+					  <h3 class="w3-wide">Add Question</h3>
+					  <p><textarea rows="3" cols="110" class="w3-padding-small" name="" placeholder="Type here..."></textarea></p>
+					  <button type="button" class="w3-button w3-padding-large w3-blue w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Submit</button>
+					  <button type="button" class="w3-button w3-padding-large w3-red w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Cancel</button>
+					</div>
+				  </div>
+				</div>
+
+
+
+				<div id="addOption" class="w3-modal">
+				  <div class="w3-modal-content w3-animate-zoom">
+				  <i onclick="document.getElementById('addOption').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
+					<div class="w3-container w3-white w3-center">
+					  <h3 class="w3-wide">Add Option</h3>
+					  <p><form action="">
+					<input placeholder="type here" type="text" name="">
+					</form></p>
+					  <button type="button" class="w3-button w3-padding-large w3-blue w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Submit</button>
+					  <button type="button" class="w3-button w3-padding-large w3-red w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Cancel</button>
+					</div>
+				  </div>
+				</div>
+>>>>>>> master
 
 
 
           </div>
+<<<<<<< HEAD
 
           <!--
             check if user != student
@@ -424,6 +512,11 @@
         </div>
 
         <!-- modal -->
+=======
+      <?php if ($_SESSION['utype'] != 4): ?>
+        <!-- modal -->
+
+>>>>>>> master
       <?php endif; ?>
 
 

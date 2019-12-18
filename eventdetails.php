@@ -68,7 +68,7 @@
         <div class="w3-col s8 w3-bar">
           <span>Welcome, <strong><?php echo $_SESSION['uname']; ?></strong></span><br>
           <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+          <a href="#" class="w3-bar-item w3-button"><i class="fas fa-cogs"></i></a>
         </div>
       </div>
       <hr>
@@ -80,6 +80,10 @@
         <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
         <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <?php if ($_SESSION['utype'] != 4): ?>
+          <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
+          <a href="section" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
     </nav> <!--Sidebar/menu -->
@@ -124,190 +128,185 @@
             check if user != student
             display attendance table
           -->
-          <?php if ($_SESSION['utype'] != 4):  ?>
             <?php
-              $table = array("table1", "table2", "table3", "table4", "table5");
+              if ($_SESSION['utype'] != 4) {
+                $table = array("table1", "table2", "table3", "table4", "table5");
 
-              $sql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
-                        JOIN sbo.attendance a
-                          ON sa.att_id = a.attendance_id
-                        JOIN sbo.events e
-                          ON a.event_id = e.event_id
-                        where a.event_id = $id;";
-              $result = mysqli_query($conn, $sql);
-              $resultCheck = mysqli_num_rows($result);
-              if ($resultCheck > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                  $date = $row['date'];
-                  $sql2 = "SELECT
-                                concat(s.last_name, ', ', s.first_name) as name,
-                                concat(se.year, se.section) as year_section,
-                                sa.am_in,
-                                sa.am_out,
-                                sa.pm_in,
-                                sa.pm_out,
-                                a.event_id,
-                                a.date,
-                                a.attendance_id,
-                                a.am_in_start,
-                                a.am_in_end,
-                                a.am_out_start,
-                                a.am_out_end,
-                                a.pm_instart,
-                                a.pm_inend,
-                                a.pm_outstart,
-                                a.pm_outend,
-                                s.student_id
-                              FROM sbo.student_attendance sa
-                                join student s
-                                  on sa.student_id = s.student_id
-                                join attendance a
-                                  on sa.att_id = a.attendance_id
-                                join events e
-                                  on a.event_id = e.event_id
-                                join section se
-                                  on se.section_id = s.section_id
-                          WHERE a.event_id = $id AND a.date = '$date';";
+                $sql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
+                          JOIN sbo.attendance a
+                            ON sa.att_id = a.attendance_id
+                          JOIN sbo.events e
+                            ON a.event_id = e.event_id
+                          where a.event_id = $id;";
+                $result = mysqli_query($conn, $sql);
+                $resultCheck = mysqli_num_rows($result);
+                if ($resultCheck > 0) {
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    $date = $row['date'];
+                    $sql2 = "SELECT
+                                  concat(s.last_name, ', ', s.first_name) as name,
+                                  concat(se.year, se.section) as year_section,
+                                  sa.am_in,
+                                  sa.am_out,
+                                  sa.pm_in,
+                                  sa.pm_out,
+                                  a.event_id,
+                                  a.date,
+                                  a.attendance_id,
+                                  a.am_in_start,
+                                  a.am_in_end,
+                                  a.am_out_start,
+                                  a.am_out_end,
+                                  a.pm_instart,
+                                  a.pm_inend,
+                                  a.pm_outstart,
+                                  a.pm_outend,
+                                  s.student_id
+                                FROM sbo.student_attendance sa
+                                  join student s
+                                    on sa.student_id = s.student_id
+                                  join attendance a
+                                    on sa.att_id = a.attendance_id
+                                  join events e
+                                    on a.event_id = e.event_id
+                                  join section se
+                                    on se.section_id = s.section_id
+                            WHERE a.event_id = $id AND a.date = '$date';";
 
-                  $result2 = mysqli_query($conn, $sql2);
-                  $resultCheck2 = mysqli_num_rows($result2);
-                  echo '<table id="';
-                    for($i=0; $i < $resultCheck2; $i++){
-                      echo $table[$i];
-                    }
-                  echo '" class="display">
-                      <thead>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Section</th>
-                        <th>AM Sign In</th>
-                        <th>AM Sign Out</th>
-                        <th>PM Sign In</th>
-                        <th>PM Sign Out</th>
-                      </thead>
-                      <tbody>
-                  ';
+                    $result2 = mysqli_query($conn, $sql2);
+                    $resultCheck2 = mysqli_num_rows($result2);
+                    echo '<table id="'; echo $table[0]; echo '" class="display">
+                        <thead>
+                          <th>Student ID</th>
+                          <th>Name</th>
+                          <th>Section</th>
+                          <th>AM Sign In</th>
+                          <th>AM Sign Out</th>
+                          <th>PM Sign In</th>
+                          <th>PM Sign Out</th>
+                        </thead>
+                        <tbody>
+                    ';
 
-                  if ($resultCheck2 > 0) {
-                    while ($row2 = mysqli_fetch_assoc($result2)) {
-                      $am_instart = strtotime($row2['am_in_start']);
-                      $am_inend = strtotime($row2['am_in_end']);
-                      $am_outstart = strtotime($row2['am_out_start']);
-                      $am_outend = strtotime($row2['am_out_end']);
-                      $pm_instart = strtotime($row2['pm_instart']);
-                      $pm_inend = strtotime($row2['pm_inend']);
-                      $pm_outstart = strtotime($row2['pm_outstart']);
-                      $pm_outend = strtotime($row2['pm_outend']);
-                      $sId = $row2['student_id'];
-                      $name = $row2['name'];
-                      $sect = $row2['year_section'];
+                    if ($resultCheck2 > 0) {
+                      while ($row2 = mysqli_fetch_assoc($result2)) {
+                        $am_instart = strtotime($row2['am_in_start']);
+                        $am_inend = strtotime($row2['am_in_end']);
+                        $am_outstart = strtotime($row2['am_out_start']);
+                        $am_outend = strtotime($row2['am_out_end']);
+                        $pm_instart = strtotime($row2['pm_instart']);
+                        $pm_inend = strtotime($row2['pm_inend']);
+                        $pm_outstart = strtotime($row2['pm_outstart']);
+                        $pm_outend = strtotime($row2['pm_outend']);
+                        $sId = $row2['student_id'];
+                        $name = $row2['name'];
+                        $sect = $row2['year_section'];
 
-                      $attId = $row2['attendance_id'];
-                      $am_in = 'am_in';
-                      $am_out = 'am_out';
-                      $pm_in = 'pm_in';
-                      $pm_out = 'pm_out';
+                        $attId = $row2['attendance_id'];
+                        $am_in = 'am_in';
+                        $am_out = 'am_out';
+                        $pm_in = 'pm_in';
+                        $pm_out = 'pm_out';
 
-                      echo '<tr>';
-                      echo '<td>' . $sId . '</td>';
-                      echo '<td>' . $name . '</td>';
-                      echo '<td>' . $sect . '</td>';
-                      //check if student has signed in
-                      if (($row2['am_in'] == NULL) && (($currentTime > $am_instart) && ($currentTime < $am_inend))) {
-                        echo '<td class="dt-center">';
-                        echo '<form action="inc/edit.inc.php" method="POST">
-                                <input type="hidden" name="eId" value="'.$id.'">
-                                <input type="hidden" name="sId" value="'.$sId.'">
-                                <input type="hidden" name="aId" value="'.$attId.'">
-                                <input type="hidden" name="type" value="'.$am_in.'">
-                                <input type="hidden" name="time" value="'.$getTime.'">
-                                <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
-                              </form>';
-                        echo '</td>';
+                        echo '<tr>';
+                        echo '<td>' . $sId . '</td>';
+                        echo '<td>' . $name . '</td>';
+                        echo '<td>' . $sect . '</td>';
+                        //check if student has signed in
+                        if (($row2['am_in'] == NULL) && (($currentTime > $am_instart) && ($currentTime < $am_inend))) {
+                          echo '<td class="dt-center">';
+                          echo '<form action="inc/edit.inc.php" method="POST">
+                                  <input type="hidden" name="eId" value="'.$id.'">
+                                  <input type="hidden" name="sId" value="'.$sId.'">
+                                  <input type="hidden" name="aId" value="'.$attId.'">
+                                  <input type="hidden" name="type" value="'.$am_in.'">
+                                  <input type="hidden" name="time" value="'.$getTime.'">
+                                  <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
+                                </form>';
+                          echo '</td>';
 
-                      } elseif ($row2['am_in'] != NULL) {
-                          echo '<td class="dt-center">'.$row2['am_in'].'</td>';
-                      } else {
-                        echo '<td class="dt-center">Absent</td>';
-                      }
+                        } elseif ($row2['am_in'] != NULL) {
+                            echo '<td class="dt-center">'.$row2['am_in'].'</td>';
+                        } else {
+                          echo '<td class="dt-center">Absent</td>';
+                        }
 
-                      //check if student has signed in
-                      if (($row2['am_out'] == NULL) && (($currentTime > $am_outstart) && ($currentTime < $am_outend))) {
-                        echo '<td class="dt-center">';
-                        echo '<form action="inc/edit.inc.php" method="POST">
-                                <input type="hidden" name="eId" value="'.$id.'">
-                                <input type="hidden" name="sId" value="'.$sId.'">
-                                <input type="hidden" name="aId" value="'.$attId.'">
-                                <input type="hidden" name="type" value="'.$am_out.'">
-                                <input type="hidden" name="time" value="'.$getTime.'">
-                                <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
-                              </form>';
-                        echo '</td>';
+                        //check if student has signed in
+                        if (($row2['am_out'] == NULL) && (($currentTime > $am_outstart) && ($currentTime < $am_outend))) {
+                          echo '<td class="dt-center">';
+                          echo '<form action="inc/edit.inc.php" method="POST">
+                                  <input type="hidden" name="eId" value="'.$id.'">
+                                  <input type="hidden" name="sId" value="'.$sId.'">
+                                  <input type="hidden" name="aId" value="'.$attId.'">
+                                  <input type="hidden" name="type" value="'.$am_out.'">
+                                  <input type="hidden" name="time" value="'.$getTime.'">
+                                  <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
+                                </form>';
+                          echo '</td>';
 
-                      } elseif ($row2['am_out'] != NULL) {
-                          echo '<td class="dt-center">'.$row2['am_out'].'</td>';
-                      } else {
-                        echo '<td class="dt-center">Absent</td>';
-                      }
+                        } elseif ($row2['am_out'] != NULL) {
+                            echo '<td class="dt-center">'.$row2['am_out'].'</td>';
+                        } else {
+                          echo '<td class="dt-center">Absent</td>';
+                        }
 
-                      //check if student has signed in
-                      if (($row2['pm_in'] == NULL) && (($currentTime > $pm_instart) && ($currentTime < $pm_inend))) {
-                        echo '<td class="dt-center">';
-                        echo '<form action="inc/edit.inc.php" method="POST">
-                                <input type="hidden" name="eId" value="'.$id.'">
-                                <input type="hidden" name="sId" value="'.$sId.'">
-                                <input type="hidden" name="aId" value="'.$attId.'">
-                                <input type="hidden" name="type" value="'.$pm_in.'">
-                                <input type="hidden" name="time" value="'.$getTime.'">
-                                <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign In</button>
-                              </form>';
-                        echo '</td>';
+                        //check if student has signed in
+                        if (($row2['pm_in'] == NULL) && (($currentTime > $pm_instart) && ($currentTime < $pm_inend))) {
+                          echo '<td class="dt-center">';
+                          echo '<form action="inc/edit.inc.php" method="POST">
+                                  <input type="hidden" name="eId" value="'.$id.'">
+                                  <input type="hidden" name="sId" value="'.$sId.'">
+                                  <input type="hidden" name="aId" value="'.$attId.'">
+                                  <input type="hidden" name="type" value="'.$pm_in.'">
+                                  <input type="hidden" name="time" value="'.$getTime.'">
+                                  <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign In</button>
+                                </form>';
+                          echo '</td>';
 
-                      } elseif ($row2['pm_in'] != NULL) {
-                          echo '<td class="dt-center">'.$row2['pm_in'].'</td>';
-                      } else {
-                        echo '<td class="dt-center">Absent</td>';
-                      }
+                        } elseif ($row2['pm_in'] != NULL) {
+                            echo '<td class="dt-center">'.$row2['pm_in'].'</td>';
+                        } else {
+                          echo '<td class="dt-center">Absent</td>';
+                        }
 
-                      //check if student has signed in
-                      if (($row2['pm_out'] == NULL) && (($currentTime > $pm_outstart) && ($currentTime < $pm_outend))) {
-                        echo '<td class="dt-center">';
-                        echo '<form action="inc/edit.inc.php" method="POST">
-                                <input type="hidden" name="eId" value="'.$id.'">
-                                <input type="hidden" name="sId" value="'.$sId.'">
-                                <input type="hidden" name="aId" value="'.$attId.'">
-                                <input type="hidden" name="type" value="'.$pm_out.'">
-                                <input type="hidden" name="time" value="'.$getTime.'">
-                                <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
-                              </form>';
-                        echo '</td>';
+                        //check if student has signed in
+                        if (($row2['pm_out'] == NULL) && (($currentTime > $pm_outstart) && ($currentTime < $pm_outend))) {
+                          echo '<td class="dt-center">';
+                          echo '<form action="inc/edit.inc.php" method="POST">
+                                  <input type="hidden" name="eId" value="'.$id.'">
+                                  <input type="hidden" name="sId" value="'.$sId.'">
+                                  <input type="hidden" name="aId" value="'.$attId.'">
+                                  <input type="hidden" name="type" value="'.$pm_out.'">
+                                  <input type="hidden" name="time" value="'.$getTime.'">
+                                  <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
+                                </form>';
+                          echo '</td>';
 
-                      } elseif ($row2['pm_out'] != NULL) {
-                          echo '<td class="dt-center">'.$row2['pm_out'].'</td>';
-                      } else {
-                        echo '<td class="dt-center">Absent</td>';
-                      }
+                        } elseif ($row2['pm_out'] != NULL) {
+                            echo '<td class="dt-center">'.$row2['pm_out'].'</td>';
+                        } else {
+                          echo '<td class="dt-center">Absent</td>';
+                        }
 
-                      echo '</tr>';
+                        echo '</tr>';
 
-                    } //end loop
-                  } //end resultcheck
-                  echo '</tbody></table>';
-                } //end loop
-              } //end resultcheck
-
-            else //for students view
-              ?>
-                <table class="w3-table">
-                  <thead>
+                      } //end loop
+                    } //end resultcheck
+                    echo '</tbody></table>';
+                    echo '<br>';
+                    $table++;
+                  } //end loop
+                } //end resultcheck
+              } else {
+                echo '<table class="w3-table">
+                  <thead class="w3-blue">
                     <th>Date</th>
                     <th>AM Sign In</th>
                     <th>AM Sign Out</th>
                     <th>PM Sign In</th>
                     <th>PM Sign Out</th>
                   </thead>
-                <tbody>
-              <?php
+                <tbody>';
                 $sId = $_SESSION['uid'];
                 $stSql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
                           JOIN sbo.attendance a
@@ -380,19 +379,16 @@
                             echo '</tr>';
 
 
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-            ?>
-              </tbody>
-            </table>
-          <?php endif; //display if user != student ?>
-
-
-
+                          } //end inner populate array loop
+                        } //end inner result check for student view
+                      } //end inner check connection for student view
+                    } //end populate array loop for  student view
+                  } //end check result for student view
+                } //end chceck connection for student view
+                echo '</tbody>
+              </table>';
+              } //for students view
+              ?>
         </div>
       </div>
 
@@ -406,14 +402,19 @@
           <div class="w3-modal-content w3-animate-zoom w3-padding-large">
           <div class="w3-container w3-white w3-center">
             <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
+<<<<<<< HEAD
             <span onclick="document.getElementById('subscribe').style.display='none'"
               class="w3-button w3-display-topright">&times;</span>
+=======
+
+>>>>>>> master
             <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
             <p>Please provide the necessary information type to start monitoring the attendance.</p>
 
               <form class="" action="inc/insert.inc.php" method="post">
                   <p><input class="w3-input w3-border" type="hidden" value="<?php echo $id;?>" ></p>
                   <p> AM <input type="checkbox" class="w3-check" name="" value=""> PM <input type="checkbox" class="w3-check" name="" value=""> </p>
+<<<<<<< HEAD
                   <p><h5>AM Sign In</h5></p>
                   <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
                   <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
@@ -427,10 +428,48 @@
                   <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
                   <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
 
+=======
+
+					<div class="w3-container">
+					<div class="w3-row w3-large">
+					  <div class="w3-col s6">
+						<p><h5>AM Sign In</h5></p>
+						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+
+					  <div class="w3-col s6">
+						 <p><h5>AM Sign Out</h5></p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+					</div>
+
+					  <div class="w3-row w3-large">
+					  <div class="w3-col s6">
+						<p><h5>PM Sign In</h5></p>
+						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+
+					  <div class="w3-col s6">
+						 <p><h5>PM Sign Out</h5></p>
+						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
+						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
+					  </div>
+					</div>
+					</div>
+		  <div class="w3-container w3-white w3-right">
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
+>>>>>>> master
           </div>
           <div class="w3-container w3-white w3-right">
             <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
           </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
           </form>
           </div>
         </div>

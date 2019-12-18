@@ -71,7 +71,7 @@
 
         <!-- show if admin/attendance officer-->
         <?php if (($_SESSION['utype'] == 1) || ($_SESSION['utype'] == 2)): ?>
-          <button onclick="document.getElementById('addEvent').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round">Add New Event</button>
+          <button onclick="document.getElementById('addEvent').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round ">Add Survey</button>
         <?php endif; ?>
 
         <?php
@@ -96,8 +96,6 @@
         ?>
 
       </div>
-
-
       <!-- Footer -->
       <footer class="w3-container w3-padding-16 w3-light-grey">
         <h4>FOOTER</h4>

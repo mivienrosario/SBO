@@ -256,6 +256,8 @@
 
                         } elseif ($row2['am_in'] != NULL) {
                             echo '<td class="dt-center">'.$row2['am_in'].'</td>';
+                        } elseif (($row2['am_in_start'] == 'N/A')) {
+                            echo '<td class="dt-center">N/A</td>';
                         } else {
                           echo '<td class="dt-center">Absent</td>';
                         } //end check
@@ -275,7 +277,9 @@
 
                         } elseif ($row2['am_out'] != NULL) {
                             echo '<td class="dt-center">'.$row2['am_out'].'</td>';
-                        } else {
+                        } elseif (($row2['am_out_start'] == 'N/A')) {
+                            echo '<td class="dt-center">N/A</td>';
+                        }  else {
                           echo '<td class="dt-center">Absent</td>';
                         } //end check
 
@@ -294,8 +298,10 @@
 
                         } elseif ($row2['pm_in'] != NULL) {
                             echo '<td class="dt-center">'.$row2['pm_in'].'</td>';
-                        } else {
-                          echo '<td class="dt-center">Absent</td>';
+                        } elseif (($row2['pm_instart'] == 'N/A')) {
+                            echo '<td class="dt-center">N/A</td>';
+                        }  else {
+                            echo '<td class="dt-center">Absent</td>';
                         } //end check
 
                         //check if student has signed in
@@ -313,7 +319,9 @@
 
                         } elseif ($row2['pm_out'] != NULL) {
                             echo '<td class="dt-center">'.$row2['pm_out'].'</td>';
-                        } else {
+                        } elseif (($row2['pm_outstart'] == 'N/A')) {
+                            echo '<td class="dt-center">N/A</td>';
+                        }  else {
                           echo '<td class="dt-center">Absent</td>';
                         } //end check
 
@@ -360,6 +368,14 @@
                       $date = $rowSt['date'];
                       $stSql2 = "SELECT
                                     a.date,
+                                    a.am_in_start,
+                                    a.am_in_end,
+                                    a.am_out_start,
+                                    a.am_out_end,
+                                    a.pm_instart,
+                                    a.pm_inend,
+                                    a.pm_outstart,
+                                    a.pm_outend,
                                     sa.am_in,
                                     sa.am_out,
                                     sa.pm_in,
@@ -436,7 +452,7 @@
         <div id="subscribe" class="w3-modal">
           <div class="w3-modal-content w3-animate-zoom w3-padding-large">
           <div class="w3-container w3-white w3-center">
-            <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
+
             <span onclick="document.getElementById('subscribe').style.display='none'"
               class="w3-button w3-display-topright">&times;</span>
             <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
@@ -477,11 +493,8 @@
 					  </div>
 					</div>
 					</div>
-		  <div class="w3-container w3-white w3-right">
+		       <div class="w3-container w3-white w3-right">
             <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="add-attendance">Save</button>
-          </div>
-          <div class="w3-container w3-white w3-right">
-            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
           </div>
           </form>
           </div>

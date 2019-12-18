@@ -105,6 +105,16 @@
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">
+          <!--
+            check if user != student
+            display attendance table
+          -->
+          <?php if ($_SESSION['utype'] != 4): ?>
+            <div class="w3-col m2">
+              <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round">Register Student</button>
+            </div>
+          <?php endif; ?>
+
           <!-- student table -->
           <table id="table" class="display">
             <thead>
@@ -149,6 +159,65 @@
           </table> <!-- student table -->
         </div>
       </div>
+
+      <?php if ($_SESSION['utype'] != 4): ?>
+        <!-- modal -->
+        <div id="subscribe" class="w3-modal">
+          <div class="w3-modal-content w3-animate-zoom w3-padding-large">
+          <div class="w3-container w3-white w3-center">
+            <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
+
+            <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
+            <p>Please provide the necessary information type to start monitoring the attendance.</p>
+            <div class="w3-container w3-white w3-left-align">
+              <form class="" action="inc/insert.inc.php" method="post">
+                <p  class="w3-text-left">
+                  <label for="">Student ID</label>
+                  <input class="w3-input" type="text" name="sId" placeholder="###-####-#">
+                </p>
+                <p>
+                  <label for="">Last Name</label>
+                  <input class="w3-input" type="text" name="lname" placeholder="Last Name">
+                </p>
+                <p>
+                  <label for="">First Name</label>
+                  <input class="w3-input" type="text" name="fname" placeholder="First Name">
+                </p>
+                <p>
+                  <label for="">Middle Name</label>
+                  <input class="w3-input" type="text" name="mname" placeholder="Middle Name">
+                </p>
+                <p>
+                  <select class="w3-input" name="yr_sect">
+                    <?php
+                      $sql = "SELECT * FROM section;";
+
+                    ?>
+                  </select>
+                </p>
+                <p>
+                  <label for="">Contact Number</label>
+                  <input class="w3-input" type="text" name="num" placeholder="ex: 09123456789">
+                </p>
+                <p>
+                  <label for="">Address</label>
+                  <input class="w3-input" type="text" name="address" placeholder="Address">
+                </p>
+
+
+  		  <div class="w3-container w3-white w3-right">
+              <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
+            </div>
+            </div>
+
+            </form>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- modal -->
+      <?php endif; ?>
 
 
       <!-- content here -->

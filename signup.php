@@ -30,9 +30,6 @@
             <a href="login.php" class="w3-tiny">Already got an account? Log in here.</a>
         </form>
       </div>
-
-
     </div>
-
   </body>
 </html>

@@ -89,7 +89,7 @@
         <a href="survey.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
         <?php if ($_SESSION['utype'] != 4): ?>
         <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
-        <a href="section" class="w3-bar-item w3-button w3-padding "><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <a href="section.php" class="w3-bar-item w3-button w3-padding "><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>

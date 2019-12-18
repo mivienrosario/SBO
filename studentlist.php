@@ -66,7 +66,37 @@
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <!-- Header -->
       <header class="w3-container" style="padding-top:22px">
-        <h5><b><i class="fa fa-dashboard"></i> Student</b></h5>
+       <style>
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li+li:before {
+		padding: 8px;
+		color: black;
+		content: "/\00a0";
+		}
+		ul.breadcrumb li a {
+		color: #0275d8;
+		text-decoration: none;
+		}
+		ul.breadcrumb li a:hover {
+		color: black;
+		text-decoration: underline;
+		}
+		</style>
+
+	  	<div class="container">                 
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item">Student</li>
+			
+			
+  </ul>
+</div>
       </header> <!-- Header -->
 
 

@@ -28,6 +28,7 @@
   }
 ?>
 <!DOCTYPE html>
+
 <html lang="en" dir="ltr">
   <head>
     <title>W3.CSS Template</title>
@@ -37,6 +38,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
+	<link rel="stylesheet" href="master.css">
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
     <style>
       html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -66,7 +68,7 @@
         <div class="w3-col s8 w3-bar">
           <span>Welcome, <strong><?php echo $_SESSION['uname']; ?></strong></span><br>
           <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-          <a href="#" class="w3-bar-item w3-button"><i class="fas fa-cogs"></i></a>
+          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
         </div>
       </div>
       <hr>
@@ -76,10 +78,8 @@
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i>  Events</a>
-        <?php if ($_SESSION['utype'] != 4): ?>
-          <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
-          <a href="section" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
-        <?php endif; ?>
+        <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
+        <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
     </nav> <!--Sidebar/menu -->
@@ -91,18 +91,47 @@
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <!-- Header -->
       <header class="w3-container" style="padding-top:22px">
-        <h5><b><i class="fas fa-calendar-week"></i> Events</b></h5>
+			  <style>
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li {
+		display: inline;
+		font-size: 18px;
+		}
+		ul.breadcrumb li+li:before {
+		padding: 8px;
+		color: black;
+		content: "/\00a0";
+		}
+		ul.breadcrumb li a {
+		color: #0275d8;
+		text-decoration: none;
+		}
+		</style>
+
+	  	<div class="container">
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item"><a href="event.php">Events</a></li>
+			<li class="breadcrumb-item">Event Details</li>
+
+
+  </ul>
+</div>
       </header> <!-- Header -->
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">
-          <h5 class="w3-opacity"><b><?php echo $title; ?></b></h5>
+          <h5 class=""><b><?php echo $title; ?></b><a href="survey.php?id=<?php echo $id; ?>"><input type="submit" class="w3-btn w3-blue w3-round w3-right" name="" value="Go to Survey"></a></h5>
+		  <br>
           <p><?php echo $desc; ?></p>
           <hr>
           <div class="w3-row">
             <div class="w3-col m2">
               <h5 class="w3-opacity"><b>Attendance</b></h5>
             </div>
+
 
             <!--
               check if user != student & officer
@@ -122,6 +151,7 @@
             check if user != student
             display attendance table
           -->
+          <?php if ($_SESSION['utype'] != 4):  ?>
             <?php
               if ($_SESSION['utype'] != 4) {
                 $table = array("table1", "table2", "table3", "table4", "table5");
@@ -266,26 +296,7 @@
                           echo '<td class="dt-center">Absent</td>';
                         }
 
-                        //check if student has signed in
-                        if (($row2['pm_out'] == NULL) && (($currentTime > $pm_outstart) && ($currentTime < $pm_outend))) {
-                          echo '<td class="dt-center">';
-                          echo '<form action="inc/edit.inc.php" method="POST">
-                                  <input type="hidden" name="eId" value="'.$id.'">
-                                  <input type="hidden" name="sId" value="'.$sId.'">
-                                  <input type="hidden" name="aId" value="'.$attId.'">
-                                  <input type="hidden" name="type" value="'.$pm_out.'">
-                                  <input type="hidden" name="time" value="'.$getTime.'">
-                                  <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign Out</button>
-                                </form>';
-                          echo '</td>';
-
-                        } elseif ($row2['pm_out'] != NULL) {
-                            echo '<td class="dt-center">'.$row2['pm_out'].'</td>';
-                        } else {
-                          echo '<td class="dt-center">Absent</td>';
-                        }
-
-                        echo '</tr>';
+                      echo '</tr>';
 
                       } //end loop
                     } //end resultcheck
@@ -376,16 +387,19 @@
                             echo '</tr>';
 
 
-                          } //end inner populate array loop
-                        } //end inner result check for student view
-                      } //end inner check connection for student view
-                    } //end populate array loop for  student view
-                  } //end check result for student view
-                } //end chceck connection for student view
-                echo '</tbody>
-              </table>';
-              } //for students view
-              ?>
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+            ?>
+              </tbody>
+            </table>
+          <?php endif; //display if user != student ?>
+
+
+
         </div>
       </div>
 
@@ -399,7 +413,8 @@
           <div class="w3-modal-content w3-animate-zoom w3-padding-large">
           <div class="w3-container w3-white w3-center">
             <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
-
+            <span onclick="document.getElementById('subscribe').style.display='none'"
+              class="w3-button w3-display-topright">&times;</span>
             <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
             <p>Please provide the necessary information type to start monitoring the attendance.</p>
 
@@ -441,8 +456,9 @@
 		  <div class="w3-container w3-white w3-right">
             <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="add-attendance">Save</button>
           </div>
+          <div class="w3-container w3-white w3-right">
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
           </div>
-
           </form>
           </div>
         </div>

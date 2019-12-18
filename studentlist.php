@@ -24,8 +24,11 @@
   <body class="w3-light-grey">
     <?php
       include 'header.php';
-      if (isset($_SESSION['logged_in']) != TRUE) {
-        header("Location: login.php?error=invader");
+      if ($_SESSION['logged_in'] != TRUE) {
+        header("Location: event.php?error=invader");
+        exit();
+      } elseif ($_SESSION['utype'] = 4) {
+        header("Location: event.php?error=invader");
         exit();
       }
     ?>

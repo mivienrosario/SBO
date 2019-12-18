@@ -1,12 +1,7 @@
 <?php
-  require_once 'inc/db.inc.php';
-    $today = date('Y-m-d');
-    date_default_timezone_set('Asia/Singapore');
-    $currentTime = strtotime(date('H:i'));
-    $getTime = date("H:i");
+  require 'inc/db.inc.php';
 ?>
 <!DOCTYPE html>
-
 <html lang="en" dir="ltr">
   <head>
     <title>W3.CSS Template</title>
@@ -27,15 +22,14 @@
       }
     </style>
   </head>
-  <body class="w3-ios-background">
+  <body class="w3-light-grey">
     <?php
       include 'header.php';
-      if (isset($_SESSION['logged_in']) != TRUE) {
-        header("Location: login.php?error=invader");
+      if ($_SESSION['logged_in'] != TRUE) {
+        header("Location: event.php?error=invader");
         exit();
-      }
+      } 
     ?>
-
 
     <!-- Sidebar/menu -->
     <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
@@ -46,8 +40,8 @@
 
         <div class="w3-col s8 w3-bar">
           <span>Welcome, <strong><?php echo $_SESSION['uname']; ?></strong></span><br>
-          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+          <a href="profile.php" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+          <a href="account.php" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
         </div>
       </div>
       <hr>
@@ -56,11 +50,11 @@
       </div>
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-        <a href="event.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-calendar-week"></i>  Events</a>
+        <a href="event.php" class="w3-bar-item w3-button w3-padding "><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="survey.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-poll"></i>  Surveys</a>
         <?php if ($_SESSION['utype'] != 4): ?>
         <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
-        <a href="section" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <a href="section" class="w3-bar-item w3-button w3-padding "><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
@@ -71,80 +65,90 @@
 
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-      <!-- Header -->
-	  	<div class="w3-container">
+      <div class="w3-container">
 		    <ul class="breadcrumb">
-			    <li class="breadcrumb-item"><i class="fas fa-poll"></i>   Survey</li>
+			    <li class="breadcrumb-item"><i class="fas fa-poll"></i>  Surveys</li>
         </ul>
       </div>
 
+
+
+      <!-- content here -->
+
+
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
+        <!-- Header -->
+        <header class="w3-container" style="padding-top:22px">
+          <h1>Survey List</h1>
+        </header> <!-- Header -->
         <div class="w3-container">
-          <h5 class=""><b>Survey Title</h5>
-		      <p><button class="w3-button w3-blue" onclick="document.getElementById('addQuestion').style.display='block'">Add Question</button></p>
-			    <p><button class="w3-button w3-blue" onclick="document.getElementById('addOption').style.display='block'">Add Option</button></p>
+          <!--
+            check if user != student
+            display attendance table
+          -->
+          <?php if ($_SESSION['utype'] != 4&3): ?>
+            <div class="w3-col w3-right-align">
+              <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round" style="margin-bottom: 0.5em;"><i class="fas fa-plus"></i>   New Survey</button>
+            </div>
+          <?php endif; ?>
 
-				<div id="addQuestion" class="w3-modal">
-				  <div class="w3-modal-content w3-animate-zoom">
-				  <i onclick="document.getElementById('addQuestion').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
-					<div class="w3-container w3-white w3-center">
-					  <h3 class="w3-wide">Add Question</h3>
-					  <p><textarea rows="3" cols="110" class="w3-padding-small" name="" placeholder="Type here..."></textarea></p>
-					  <button type="button" class="w3-button w3-padding-large w3-blue w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Submit</button>
-					  <button type="button" class="w3-button w3-padding-large w3-red w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Cancel</button>
-					</div>
-				  </div>
-				</div>
+          <!-- student table -->
+          <table id="table" class="display">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Event</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                $sql = "SELECT * FROM sbo.survey s
+                          JOIN sbo.events e
+                            ON s.eventid = e.event_id;
+                      ";
+                $result = mysqli_query($conn, $sql);
+                $resultCheck = mysqli_num_rows($result);
 
+                if ($resultCheck > 0) {
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    //$dateEvent = date('M d Y', strtotime($row['start_date']));
+                    echo '<tr>';
+                    echo '<td>'; echo $row['surveytitle']; echo '</td>';
+                    echo '<td>'; echo $row['title']; echo '</td>';
+                    echo '<td class="w3-center">';
+                    ?>
+                    <?php if ($_SESSION['utype'] != 4&3): ?>
+                      <button onclick="document.getElementById('editSurvey').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round"><i class="fas fa-edit"></i>   Edit</button>
+                    <?php endif; ?>
+                    <?php
+                    echo '<a href="surveydetails.php?id='.$row['surveyid'].'" style="text-decoration: none;"><button class="w3-btn w3-blue w3-round"><i class="fas fa-eye"></i>   View</a></button></td>';
+                    echo '</tr>';
+                  }
+                }
+              ?>
+            </tbody>
+          </table> <!-- student table -->
+        </div>
+      </div>
 
-
-				<div id="addOption" class="w3-modal">
-				  <div class="w3-modal-content w3-animate-zoom">
-				  <i onclick="document.getElementById('addOption').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
-					<div class="w3-container w3-white w3-center">
-					  <h3 class="w3-wide">Add Option</h3>
-					  <p><form action="">
-					<input placeholder="type here" type="text" name="">
-					</form></p>
-					  <button type="button" class="w3-button w3-padding-large w3-blue w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Submit</button>
-					  <button type="button" class="w3-button w3-padding-large w3-red w3-margin-bottom" onclick="document.getElementById('subscribe').style.display='none'">Cancel</button>
-					</div>
-				  </div>
-				</div>
-
-
-
-          </div>
       <?php if ($_SESSION['utype'] != 4): ?>
         <!-- modal -->
 
       <?php endif; ?>
 
 
-
-
+      <!-- content here -->
 
     </div> <!-- !PAGE CONTENT! -->
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
   <script>
     $(document).ready( function () {
-      $('#table1').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table2').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table3').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table4').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table5').DataTable();
+      $('#table').DataTable();
     } );
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");

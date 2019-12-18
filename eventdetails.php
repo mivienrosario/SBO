@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
-	<link rel="stylesheet" href="master.css">
+    <link rel="stylesheet" href="src/css/breadcrumb.css">
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
     <style>
       html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -67,8 +67,8 @@
 
         <div class="w3-col s8 w3-bar">
           <span>Welcome, <strong><?php echo $_SESSION['uname']; ?></strong></span><br>
-          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+          <a href="profile.php" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+          <a href="account.php" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
         </div>
       </div>
       <hr>
@@ -78,8 +78,11 @@
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i>  Events</a>
+        <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
+        <?php if ($_SESSION['utype'] != 4): ?>
         <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
         <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
     </nav> <!--Sidebar/menu -->
@@ -89,63 +92,55 @@
 
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-      <!-- Header -->
-      <header class="w3-container" style="padding-top:22px">
-			  <style>
-		ul.breadcrumb li {
-		display: inline;
-		font-size: 18px;
-		}
-		ul.breadcrumb li {
-		display: inline;
-		font-size: 18px;
-		}
-		ul.breadcrumb li+li:before {
-		padding: 8px;
-		color: black;
-		content: "/\00a0";
-		}
-		ul.breadcrumb li a {
-		color: #0275d8;
-		text-decoration: none;
-		}
-		</style>
+      <div class="w3-container">
+	      <ul class="breadcrumb">
+          <li class="breadcrumb-item"><i class="fas fa-calendar-week"></i>   <a href="event.php">Event List</a> </li>
+			    <li class="breadcrumb-item">   <?php echo $title;?></li>
+        </ul>
+      </div>
 
-	  	<div class="container">
-		<ul class="breadcrumb">
-			<li class="breadcrumb-item"><a href="event.php">Events</a></li>
-			<li class="breadcrumb-item">Event Details</li>
-
-
-  </ul>
-</div>
-      </header> <!-- Header -->
-
+      <!-- content here -->
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
-        <div class="w3-container">
-          <h5 class=""><b><?php echo $title; ?></b><a href="survey.php?id=<?php echo $id; ?>"><input type="submit" class="w3-btn w3-blue w3-round w3-right" name="" value="Go to Survey"></a></h5>
-		  <br>
-          <p><?php echo $desc; ?></p>
-          <hr>
-          <div class="w3-row">
-            <div class="w3-col m2">
-              <h5 class="w3-opacity"><b>Attendance</b></h5>
-            </div>
-
-
-            <!--
-              check if user != student & officer
-              display attendance table
-            -->
-            <?php if ($_SESSION['utype'] != 4&3): ?>
-              <div class="w3-col m2">
-                <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn "><i class="fas fa-calendar-week"></i></button>
-              </div>
-            <?php endif; ?>
-
-
-
+        <!-- Header -->
+        <header class="w3-container">
+          <h1 class="w3-text-blue">Event Details</h1>
+        </header> <!-- Header -->
+        <!--
+          check if user != student
+          display attendance table
+        -->
+        <?php if ($_SESSION['utype'] != 4&3): ?>
+          <div class="w3-col w3-right-align">
+            <button onclick="document.getElementById('editEvent').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round"><i class="fas fa-edit"></i>   Edit Event</button>
+            <button type="button" class="w3-btn w3-blue w3-round"><i class="fas fa-poll"></i>   <a style="text-decoration: none;" href="surveydetails.php?eId=<?php echo $id; ?>">View Survey</a></button>
+            <button onclick="document.getElementById('addSurvey').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round"><i class="fas fa-plus"></i>   Add Survey</button>
           </div>
+        <?php endif; ?>
+        <table class="w3-table w3-bordered">
+          <tr>
+            <td class="w3-large ">Title</td>
+            <td><?php echo $title; ?></td>
+          </tr>
+          <tr>
+            <td class="w3-large">Description</td>
+            <td><?php echo $desc; ?></td>
+          </tr>
+        </table>
+
+        <!-- Header -->
+        <header class="w3-container">
+          <h1 class="w3-text-blue">Attendance</h1>
+        </header> <!-- Header -->
+        <!--
+          check if user != student
+          display attendance table
+        -->
+        <?php if (($_SESSION['utype'] != 4) || ($_SESSION['utype'] != 3)): ?>
+          <div class="w3-col w3-right-align">
+            <button onclick="document.getElementById('addAttendance').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round"><i class="fas fa-calendar-week"></i>   Add Attendance</button>
+          </div>
+        <?php endif; ?>
+
 
           <!--
             check if user != student
@@ -200,7 +195,7 @@
 
                     $result2 = mysqli_query($conn, $sql2);
                     $resultCheck2 = mysqli_num_rows($result2);
-                    echo '<h2>' . $date. '</h2>';
+                    echo '<h2>' . date('Y F n', strtotime($date)). '</h2>';
                     echo '<table id="'; echo $table[$index]; echo '" class="display">
                         <thead>
                         <tr>
@@ -436,10 +431,6 @@
                 echo '</tbody></table>';
               } //end user check
             ?>
-
-
-
-
         </div>
       </div>
 
@@ -449,11 +440,11 @@
       -->
       <?php if ($_SESSION['utype'] != 4): ?>
         <!-- modal -->
-        <div id="subscribe" class="w3-modal">
+        <div id="addAttendance" class="w3-modal">
           <div class="w3-modal-content w3-animate-zoom w3-padding-large">
           <div class="w3-container w3-white w3-center">
 
-            <span onclick="document.getElementById('subscribe').style.display='none'"
+            <span onclick="document.getElementById('addAttendance').style.display='none'"
               class="w3-button w3-display-topright">&times;</span>
             <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
             <p>Please provide the necessary information type to start monitoring the attendance.</p>
@@ -480,25 +471,73 @@
 					</div>
 
 					  <div class="w3-row w3-large">
-					  <div class="w3-col s6">
-						<p><h5>PM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="inStartPM" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="inEndPM" value=""> </p>
+  					  <div class="w3-col s6">
+  						<p><h5>PM Sign In</h5></p>
+  						<p> Start <input class="w3-input w3-border" type="time" name="inStartPM" value=""> </p>
+  						<p> End <input class="w3-input w3-border" type="time" name="inEndPM" value=""> </p>
+  					  </div>
+
+  					  <div class="w3-col s6">
+  						 <p><h5>PM Sign Out</h5></p>
+  						 <p> Start <input class="w3-input w3-border" type="time" name="outStartPM" value=""> </p>
+  						 <p> End <input class="w3-input w3-border" type="time" name="outEndPM" value=""> </p>
+  					  </div>
 					  </div>
 
-					  <div class="w3-col s6">
-						 <p><h5>PM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="outStartPM" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="outEndPM" value=""> </p>
-					  </div>
-					</div>
 					</div>
 		       <div class="w3-container w3-white w3-right">
-            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="add-attendance">Save</button>
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('addAttendance').style.display='none'" name="add-attendance">Save</button>
           </div>
           </form>
           </div>
         </div>
+        </div>
+
+        <!-- edit event modal -->
+        <div id="editEvent" class="w3-modal">
+          <div class="w3-modal-content w3-animate-zoom w3-padding-large">
+          <div class="w3-container w3-white w3-center">
+            <span onclick="document.getElementById('editEvent').style.display='none'"
+              class="w3-button w3-display-topright">&times;</span>
+            <h2 class="w3-wide w3-text-blue">EDIT EVENT</h2>
+            <p>Please update the appropriate information type to edit the event details.</p>
+            <form class="" action="inc/edit.inc.php" method="post">
+              <input type="hidden" name="id" value="<?php echo $id;?>">
+  				    <p>Event Title <input type="text" class="w3-input w3-border" name="title" value="<?php echo $title;?>"></p>
+  				    <p>Description <textarea rows="2" col="40" class="w3-input" name="description" value="<?php echo $desc;?>"><?php echo $desc;?></textarea></p>
+  				    <p>Start Date <input type="date" class="w3-input w3-border" name="start" value="<?php echo date('Y-m-d', strtotime($dateSt));?>"></p>
+  				    <p>End Date <input type="date" class="w3-input w3-border" name="end" value="<?php echo date('Y-m-d', strtotime($dateEnd));?>"></p>
+
+          <div class="w3-container w3-white w3-right">
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round " onclick="document.getElementById('editEvent').style.display='none'" name="edit-event">Save</button>
+          </div>
+        </form>
+          </div>
+          </div>
+        </div> <!-- edit event modal -->
+
+        <!-- edit event modal -->
+        <div id="addSurvey" class="w3-modal">
+          <div class="w3-modal-content w3-animate-zoom w3-padding-large">
+          <div class="w3-container w3-white w3-center">
+            <span onclick="document.getElementById('addSurvey').style.display='none'"
+              class="w3-button w3-display-topright">&times;</span>
+            <h2 class="w3-wide w3-text-blue">NEW SURVEY</h2>
+            <p>Please insert a title for the survey.</p>
+            <form class="" action="inc/insert.inc.php" method="post">
+              <input type="hidden" name="id" value="<?php echo $id;?>">
+  				    <p>Survey Title <input type="text" class="w3-input w3-border" name="title"></p>
+
+          <div class="w3-container w3-white w3-right">
+            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round " onclick="document.getElementById('addSurvey').style.display='none'" name="add-survey">Save</button>
+          </div>
+        </form>
+          </div>
+          </div>
+        </div> <!-- edit event modal -->
+
+        <!-- modal -->
+
 
         <!-- modal -->
       <?php endif; ?>
@@ -507,7 +546,7 @@
 
 
 
-    </div> <!-- !PAGE CONTENT! -->
+   <!-- !PAGE CONTENT! -->
 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -528,6 +567,21 @@
     } );
     $(document).ready( function () {
       $('#table5').DataTable();
+    } );
+    $(document).ready( function () {
+      $('#table6').DataTable();
+    } );
+    $(document).ready( function () {
+      $('#table7').DataTable();
+    } );
+    $(document).ready( function () {
+      $('#table8').DataTable();
+    } );
+    $(document).ready( function () {
+      $('#table9').DataTable();
+    } );
+    $(document).ready( function () {
+      $('#table10').DataTable();
     } );
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");

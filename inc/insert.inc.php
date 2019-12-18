@@ -5,8 +5,8 @@ session_start();
 
   //insert student
   if (isset($_POST['saveStud'])) {
-    $id = $_POST['studID'];
-    $sectId = $_POST['sect_id'];
+    $id = $_POST['sId'];
+    $sectId = $_POST['yr_sect'];
     $last = $_POST['lname'];
     $first = $_POST['fname'];
     $mid = $_POST['mname'];
@@ -18,17 +18,14 @@ session_start();
               first_name,
               middle_name,
               address,
-              contact_num)
-            VALUES('$id', '$last', '$first', '$mid', '$address', '$num');";
-    $sql = "INSERT INTO sbo.student_section(student_id,
+              contact_num,
               section_id)
-            VALUES('$id', $sectId);";
+            VALUES('$id', '$last', '$first', '$mid', '$address', '$num', $sectId);";
 
-    if (!mysqli_multi_query($conn, $sql)) {
+    if (!mysqli_query($conn, $sql)) {
       echo (mysqli_error($conn));
-      header("Location: ../students.php?registration=error");
     } else {
-      header("Location: ../students.php?registration=successful");
+      header("Location: ../studentlist.php?registration=successful");
       exit();
     }
     mysqli_stmt_close($stmt);
@@ -58,28 +55,26 @@ session_start();
   //insert event
   if (isset($_POST['add-event'])) {
     $title = $_POST['title'];
-    //$start = date('Y-m-d', strtotime(str_replace('-', '/', $_POST['start'])));
-    //$end = date('Y-m-d',  strtotime(str_replace('-', '/', $_POST['end'])));
-    $start = $_POST['start'];
-    $end = $_POST['end'];
-    $desc = $_POST['desc'];
-
-    $sql = "INSERT INTO sbo.event(title, create_date, description, start_date, end_date) VALUES('$title', '$today', '$desc', '$start', '$end')";
-
-    if (!mysqli_query($conn, $sql)) {
-      echo (mysqli_error($conn));
-      echo "<br><br>";
-      echo $title;
-      echo "<br><br>";
-      echo $today;
-      echo "<br><br>";
-      echo $desc;
-      echo "<br><br>";
-      echo $start;
-      echo "<br><br>";
-      echo $end;
+    $start = date('Y-m-d', strtotime($_POST['start']));
+    $end = date('Y-m-d', strtotime($_POST['end']));
+    if ($_POST['description'] == NULL) {
+      $desc = "No description.";
     } else {
+      // code...
+      $desc = $_POST['description'];
+    }
+
+
+    $sql = "INSERT INTO sbo.events(title, description, start_date, end_date) VALUES(?, ?, ?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
       header("Location: ../index.php?saveEvent=error");
+      exit();
+    } else {
+      mysqli_stmt_bind_param($stmt, "ssss", $title, $desc, $start, $end);
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_store_result($stmt);
+      header("Location: ../event.php?saveEvent=success");
       exit();
     }
     mysqli_stmt_close($stmt);
@@ -93,7 +88,7 @@ session_start();
     $inEndPM = date('H:i', strtotime()$_POST['inEndPM']);
     $outStartPM = date('H:i', strtotime()$_POST['outStartPM']);
     $outEndPM = date('H:i', strtotime()$_POST['outEndPM']); */
-    $date = $_POST['setDate'];
+    $date = date('Y-m-d', strtotime($_POST['setDate']));
     //$type = $_POST['type'];
     $evId = $_POST['eventId'];
     //$start = date('H:i', strtotime($_POST['start']));
@@ -163,5 +158,28 @@ session_start();
         }
 
         header("Location: ../eventdetails.php?success=addAttendance&id=$evId");
+        exit();
     } //end insert attendance
   } //end add-attendance
+
+  //insert new survey
+  if (isset($_POST['add-survey'])) {
+    $event = $_POST['id'];
+    $title = $_POST['title'];
+    $sql = "INSERT INTO sbo.survey(surveytitle, eventid) VALUES(?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+      echo mysqli_error($conn);
+      //header("Location: ../index.php?saveEvent=error");
+      //exit();
+    } else {
+      mysqli_stmt_bind_param($stmt, "ss", $title, $event);
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_store_result($stmt);
+      header("Location: ../surveylist.php?addSurvey=success");
+      exit();
+    }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
+  }

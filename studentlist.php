@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
+    <link rel="stylesheet" href="src/css/breadcrumb.css">
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
     <style>
       html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -42,8 +43,8 @@
 
         <div class="w3-col s8 w3-bar">
           <span>Welcome, <strong><?php echo $_SESSION['uname']; ?></strong></span><br>
-          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-          <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+          <a href="profile.php" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+          <a href="account.php" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
         </div>
       </div>
       <hr>
@@ -53,8 +54,11 @@
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <a href="event.php" class="w3-bar-item w3-button w3-padding "><i class="fas fa-calendar-week"></i>  Events</a>
-        <a href="student_list.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>  Students</a>
-        <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
+        <?php if ($_SESSION['utype'] != 4): ?>
+        <a href="studentlist.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>  Students</a>
+        <a href="section" class="w3-bar-item w3-button w3-padding "><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
     </nav> <!--Sidebar/menu -->
@@ -64,54 +68,30 @@
 
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-      <!-- Header -->
-      <header class="w3-container" style="padding-top:22px">
-       <style>
-		ul.breadcrumb li {
-		display: inline;
-		font-size: 18px;
-		}
-		ul.breadcrumb li {
-		display: inline;
-		font-size: 18px;
-		}
-		ul.breadcrumb li+li:before {
-		padding: 8px;
-		color: black;
-		content: "/\00a0";
-		}
-		ul.breadcrumb li a {
-		color: #0275d8;
-		text-decoration: none;
-		}
-		ul.breadcrumb li a:hover {
-		color: black;
-		text-decoration: underline;
-		}
-		</style>
+      <div class="w3-container">
+		    <ul class="breadcrumb">
+			    <li class="breadcrumb-item"><i class="fa fa-users fa-fw"></i>  Students</li>
+        </ul>
+      </div>
 
-	  	<div class="container">                 
-		<ul class="breadcrumb">
-			<li class="breadcrumb-item">Student</li>
-			
-			
-  </ul>
-</div>
-      </header> <!-- Header -->
 
 
       <!-- content here -->
 
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
+        <!-- Header -->
+        <header class="w3-container" style="padding-top:22px">
+          <h1 class="w3-text-blue">Student List</h1>
+        </header> <!-- Header -->
         <div class="w3-container">
           <!--
             check if user != student
             display attendance table
           -->
           <?php if ($_SESSION['utype'] != 4): ?>
-            <div class="w3-col m2">
-              <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round">Register Student</button>
+            <div class="w3-col w3-right-align">
+              <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round" style="margin-bottom: 0.5em;"><i class="fas fa-plus"></i>   Register Student</button>
             </div>
           <?php endif; ?>
 
@@ -124,13 +104,6 @@
                 <th>Year and Section</th>
               </tr>
             </thead>
-            <tfoot>
-              <tr>
-                <th>Student ID</th>
-                <th>Name</th>
-                <th>Year and Section</th>
-              </tr>
-            </tfoot>
             <tbody>
               <?php
                 $sql = "SELECT
@@ -147,10 +120,10 @@
                   while ($row = mysqli_fetch_assoc($result)) {
                     //$dateEvent = date('M d Y', strtotime($row['start_date']));
                     echo '<tr>';
-                    echo '<td><a href="student_profile.php?id='. $row['student_id'].'">';
+                    echo '<td><a href="profile.php?id='. $row['student_id'].'">';
                     echo $row['student_id']. '</a></td>';
                     echo '<td>'. $row['name'] .'</td>';
-                    echo '<td>'. $row['year_section'] . '</td>';
+                    echo '<td class="w3-center w3-text-blue"><a style="text-decoration: none;" href="section#'.$row['year_section'].'">'. $row['year_section'] . '</a></td>';
                     echo '</tr>';
                   }
                 }
@@ -167,8 +140,8 @@
           <div class="w3-container w3-white w3-center">
             <i onclick="document.getElementById('subscribe').style.display='none'" class="fa fa-remove w3-button w3-xlarge w3-right w3-transparent"></i>
 
-            <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
-            <p>Please provide the necessary information type to start monitoring the attendance.</p>
+            <h2 class="w3-wide">REGISTER NEW STUDENT</h2>
+            <p>Please provide the necessary information type to register a new student.</p>
             <div class="w3-container w3-white w3-left-align">
               <form class="" action="inc/insert.inc.php" method="post">
                 <p  class="w3-text-left">
@@ -188,9 +161,18 @@
                   <input class="w3-input" type="text" name="mname" placeholder="Middle Name">
                 </p>
                 <p>
+                  <label for="">Select Section</label>
                   <select class="w3-input" name="yr_sect">
                     <?php
-                      $sql = "SELECT * FROM section;";
+                      $sql = "SELECT section_id, concat(year, section) as yr_sect FROM section;";
+                      $result = mysqli_query($conn, $sql);
+                      $resultCheck = mysqli_num_rows($result);
+
+                      if ($resultCheck > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                          echo '<option value="'.$row['section_id'].'">'.$row['yr_sect'].'</option>';
+                        }
+                      }
 
                     ?>
                   </select>
@@ -206,7 +188,7 @@
 
 
   		  <div class="w3-container w3-white w3-right">
-              <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
+              <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="saveStud">Save</button>
             </div>
             </div>
 
@@ -221,13 +203,6 @@
 
 
       <!-- content here -->
-
-
-      <!-- Footer -->
-      <footer class="w3-container w3-padding-16 w3-light-grey">
-        <h4>FOOTER</h4>
-        <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-      </footer>
 
     </div> <!-- !PAGE CONTENT! -->
 

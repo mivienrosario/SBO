@@ -1,6 +1,6 @@
 <?php
 if(isset($_POST['pw-submit'])){
-	require 'dbh.inc.php';
+	require 'db.inc.php';
 	$username = $_POST['username'];
 	$current = $_POST['current-pw'];
 	$pwNew = $_POST['new-pw'];
@@ -13,7 +13,7 @@ if(isset($_POST['pw-submit'])){
 		$_SESSION['empty-field'] = TRUE;
 		exit();
 	} else {
-		$sql = "SELECT * FROM user WHERE user_name=?;";
+		$sql = "SELECT * FROM user WHERE username=?;";
     $stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $sql)) {
 			header("Location: ../index.php?error=sqlerror");
@@ -23,7 +23,7 @@ if(isset($_POST['pw-submit'])){
 			mysqli_stmt_execute($stmt);
 			$result = mysqli_stmt_get_result($stmt);
 			if($row = mysqli_fetch_assoc($result)) {
-				$pwdCheck = password_verify($current, $row['user_pw']);
+				$pwdCheck = password_verify($current, $row['password']);
 				if ($pwdCheck == false) {
 					header("Location: ../account.php?error=invalidpassword&user=" . $username);
 					//add session
@@ -38,7 +38,7 @@ if(isset($_POST['pw-submit'])){
 						exit();
 					} else { //end error pw repeat check handling
 						//start update
-						$sql = "UPDATE quiz.user SET user_pw=? WHERE user_name ='$username'";
+						$sql = "UPDATE sbo.user SET password=? WHERE username ='$username'";
 						$stmt = mysqli_stmt_init($conn);
 
 						//check connection

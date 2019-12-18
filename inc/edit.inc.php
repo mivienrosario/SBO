@@ -4,9 +4,9 @@
   if (isset($_POST['edit-event'])) {
     $id = $_POST['id'];
     $title = $_POST['title'];
-    $desc = $_POST['desc'];
-    $start = $_POST['start'];
-    $end = $_POST['end'];
+    $desc = $_POST['description'];
+    $start = date('Y-m-d', strtotime($_POST['start']));
+    $end = date('Y-m-d', strtotime($_POST['end']));
 
     $sql = "UPDATE sbo.events
       SET title='$title', description='$desc', start_date='$start', end_date='$end' WHERE event_id = $id;";
@@ -37,7 +37,7 @@
     echo $sql;
 
     if ($conn->query($sql) === TRUE) {
-      header("Location: ../test_event_details.php?id=$eId&update=successful");
+      header("Location: ../eventdetails.php?id=$eId&update=successful");
       exit();
     } else {
       echo mysqli_error($conn);
@@ -45,15 +45,21 @@
     }
   }
 
-  if (isset($_POST['addAttendance'])) {
-    $setDate = $_POST['setDate'];
-    //$var attendance type
-    $inStartAM = date('H:i', $_POST['inStartAM']);
-    $inStartAM = date('H:i', $_POST['inEndAM']);
-    $inStartAM = date('H:i', $_POST['outStartAM']);
-    $inStartAM = date('H:i', $_POST['outEndAM']);
-    $inStartAM = date('H:i', $_POST['inStartPM']);
-    $inStartAM = date('H:i', $_POST['inEndPM']);
-    $inStartAM = date('H:i', $_POST['outStartPM']);
-    $inStartAM = date('H:i', $_POST['outEndPM']);
+  //update student's section
+  if(isset($_POST['student-section-update'])) {
+    $id = $_POST['yrsect'];
+    $sId = $_POST['sId'];
+    $sql = "UPDATE sbo.student SET section_id = ? WHERE (student_id = ?);";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+      echo mysqli_error($conn);
+    } else {
+      mysqli_stmt_bind_param($stmt, "ss", $id, $sId);
+      mysqli_stmt_execute($stmt);
+      mysqli_stmt_store_result($stmt);
+      header("Location: ../profile.php?id=$sId&saveEvent=success");
+      exit();
+    }
+    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
   }

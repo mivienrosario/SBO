@@ -74,15 +74,16 @@
       <!-- Header -->
 	  	<div class="w3-container">
 		    <ul class="breadcrumb">
-			    <li class="breadcrumb-item"><i class="fas fa-poll"></i>   Survey</li>
+			    <li class="breadcrumb-item"><i class="fas fa-poll"></i>  <a href="survey.php">Survey List</a> </li>
+          <li class="breadcrumb-item">Survey Details</li>
         </ul>
       </div>
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <div class="w3-container">
           <h5 class=""><b>Survey Title</h5>
-		      <p><button class="w3-button w3-blue" onclick="document.getElementById('addQuestion').style.display='block'">Add Question</button></p>
-			    <p><button class="w3-button w3-blue" onclick="document.getElementById('addOption').style.display='block'">Add Option</button></p>
+		  <p><button class="w3-button w3-blue" onclick="document.getElementById('addQuestion').style.display='block'">Add Question</button></p>
+			<p><button class="w3-button w3-blue" onclick="document.getElementById('addOption').style.display='block'">Add Option</button></p>
 
 				<div id="addQuestion" class="w3-modal">
 				  <div class="w3-modal-content w3-animate-zoom">

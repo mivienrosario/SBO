@@ -1,5 +1,6 @@
 <?php
   require 'inc/db.inc.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -28,10 +29,38 @@
       if ($_SESSION['logged_in'] != TRUE) {
         header("Location: event.php?error=invader");
         exit();
-      } elseif ($_SESSION['utype'] == 4) {
-        header("Location: event.php?error=invader");
-        exit();
       }
+      if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+      } else {
+        $id = $_SESSION['uid'];
+      }
+
+        $sql = "SELECT
+                    UPPER(CONCAT(s.last_name, ', ', s.first_name, ' ', LEFT(s.middle_name, 1), '.')) as name,
+                    s.student_id,
+                    CONCAT(ss.year, ss.section) as yr_sect,
+                    s.address,
+                    s.contact_num,
+                    ut.type_desc,
+                    u.username
+                FROM student s
+                JOIN section ss ON s.section_id = ss.section_id
+                JOIN user u ON u.stud_id = s.student_id
+                JOIN user_type ut ON u.type_id = ut.type_id
+                WHERE student_id = '$id'";
+        $result = mysqli_query($conn, $sql);
+        $resultCheck = mysqli_num_rows($result);
+        if ($resultCheck > 0) {
+          while ($row = mysqli_fetch_assoc($result)) {
+            $name = $row['name'];
+            $sId = $row['student_id'];
+            $section = $row['yr_sect'];
+            $address = $row['address'];
+            $num = $row['contact_num'];
+            $user = $row['username'];
+          }
+        }
     ?>
 
     <!-- Sidebar/menu -->
@@ -54,10 +83,10 @@
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <a href="event.php" class="w3-bar-item w3-button w3-padding "><i class="fas fa-calendar-week"></i>  Events</a>
-        <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
+        <a href="survey.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
         <?php if ($_SESSION['utype'] != 4): ?>
         <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
-        <a href="section" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+        <a href="section" class="w3-bar-item w3-button w3-padding "><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
@@ -69,113 +98,50 @@
     <!-- !PAGE CONTENT! -->
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <div class="w3-container">
-	      <ul class="breadcrumb">
-			    <li class="breadcrumb-item"><i class="fa fa-bullseye fa-fw"></i>   Section</li>
+		    <ul class="breadcrumb">
+			    <li class="breadcrumb-item"><i class="fa fa-user"></i>  Profile</li>
+          <li class="breadcrumb-item"><?php echo $id; ?></li>
         </ul>
       </div>
 
       <!-- content here -->
-
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <!-- Header -->
         <header class="w3-container" style="padding-top:22px">
-          <h1>Section List</h1>
-
+          <h1><?php echo $name; ?></h1>
         </header> <!-- Header -->
         <div class="w3-container">
-          <!-- student table -->
+          <table class="w3-table w3-bordered">
+            <tr>
+              <td class="w3-large ">Section</td>
+              <td><?php echo $section; ?></td>
+              <td>
+                <?php if ($_SESSION['utype'] != 4): ?>
+                  <button onclick="document.getElementById('editSection').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round"><i class="fas fa-edit"></i>   Edit</button>
+                <?php endif; ?>
 
-              <?php
-                $sql = "SELECT section_id, concat(year,section) as year_section FROM sbo.section;";
-                $result = mysqli_query($conn, $sql);
-                $resultCheck = mysqli_num_rows($result);
-                $index = 0;
-                $table = array("table1", "table2", "table3", "table4", "table5", "table5", "table6", "table7", "table8", "table9", "table10");
-                if ($resultCheck > 0) {
-                  while ($row = mysqli_fetch_assoc($result)) {
-                    $section = $row['section_id'];
-                    $yrsect = $row['year_section'];
-                    echo '<h3 id="'.$yrsect.'">' . $yrsect . '</h3>';
-                    echo '
-                    <table id="'.$table[$index].'" class="display">
-                      <thead>
-                        <tr class="">
-                          <th>Student ID</th>
-                          <th>Name</th>
-                          <th>Year and Section</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                    ';
-
-                    $sql = "SELECT
-    	                         s.student_id,
-                               concat(s.last_name, ', ', s.first_name) as name,
-    	                         CONCAT(se.year,se.section) as year_section
-                            FROM sbo.section se
-    	                      join student s
-    		                      on s.section_id = se.section_id
-                            WHERE se.section_id = ?;";
-                    $stmt = mysqli_stmt_init($conn);
-                    if (!mysqli_stmt_prepare($stmt, $sql)) {
-                      header("Location: test_section.php?error=sql");
-                      exit();
-                    } else {
-                      mysqli_stmt_bind_param($stmt, "s", $section);
-                      mysqli_stmt_execute($stmt);
-                      $result2 = mysqli_stmt_get_result($stmt);
-                      $resultCheck2 = mysqli_num_rows($result2);
-                      if($resultCheck2 > 0) {
-                        while ($row2 = mysqli_fetch_assoc($result2)) {
-                          echo '<tr class="w3-white">';
-                          echo '<td><a href="student_profile.php?id='. $row2['student_id'].'">';
-                          echo $row2['student_id']. '</a></td>';
-                          echo '<td>'. $row2['name'] .'</td>';
-                          echo '<td class="w3-center">'. $row2['year_section'] . '</td>';
-                          echo '<td class="w3-center">';
-                          ?>
-                          <?php if ($_SESSION['utype'] != 4&3): ?>
-                            <button class="w3-btn w3-blue w3-round"><i class="fas fa-edit"></i> <a href="profile.php?id= <?php echo $row2['student_id']; ?>" style="text-decoration: none;">Edit</a>  </button>
-                            <button class="w3-btn w3-blue w3-round"><i class="fas fa-eye"></i>   View</button>
-                          <?php endif; ?>
-                          <?php
-                          echo '</td>';
-                          echo '</tr>';
-                        }
-                      }
-                    }
-                    /*
-                    $result = mysqli_query($conn, $sql);
-                    $resultCheck = mysqli_num_rows($result);
-
-                    if ($resultCheck > 0) {
-                      while ($row = mysqli_fetch_assoc($result)) {
-
-                        echo '<tr>';
-                        echo '<td><a href="student_profile.php?id='. $row['student_id'].'">';
-                        echo $row['student_id']. '</a></td>';
-                        echo '<td>'. $row['name'] .'</td>';
-                        echo '<td>'. $row['year_section'] . '</td>';
-                        echo '</tr>';
+              </td>
+            </tr>
+            <tr>
+              <td class="w3-large">Address</td>
+              <td><?php echo $address; ?></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="w3-large">Contact Number</td>
+              <td><?php echo $num; ?></td>
+              <td></td>
+            </tr>
+          </table>
 
 
-                      } //end second query result
-                    } //end second query
-                    */
-
-                    echo '
-                        </tbody>
-                      </table>
-                      ';
-                      $index++;
-                  } //end first query result
-                } //end first query
-
-
-              ?>
         </div>
       </div>
+
+      <?php if ($_SESSION['utype'] != 4&3): ?>
+        <!-- modal -->
+
+      <?php endif; ?>
 
 
       <!-- content here -->
@@ -188,6 +154,7 @@
           <h2 class="w3-wide w3-text-blue">UPDATE STUDENT'S SECTION</h2>
           <p>Please select the new year and section of the student.</p>
           <form class="" action="inc/edit.inc.php" method="post">
+            <input type="hidden" name="sId" value="<?php echo $id; ?>">
             <select class="w3-input" name="yrsect" style="margin-bottom: 0.5em;">
               <?php
                 $sql = "SELECT section_id, concat(year, section) as yr_sect FROM section;";
@@ -221,34 +188,7 @@
 
   <script>
     $(document).ready( function () {
-      $('#table1').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table2').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table3').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table4').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table5').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table6').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table7').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table8').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table9').DataTable();
-    } );
-    $(document).ready( function () {
-      $('#table10').DataTable();
+      $('#table').DataTable();
     } );
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");

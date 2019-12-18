@@ -151,9 +151,8 @@
             check if user != student
             display attendance table
           -->
-          <?php if ($_SESSION['utype'] != 4):  ?>
             <?php
-              if ($_SESSION['utype'] != 4) {
+              if ($_SESSION['utype'] != 4) { //if not student
                 $table = array("table1", "table2", "table3", "table4", "table5");
                 $index = 0;
 
@@ -204,6 +203,7 @@
                     echo '<h2>' . $date. '</h2>';
                     echo '<table id="'; echo $table[$index]; echo '" class="display">
                         <thead>
+                        <tr>
                           <th>Student ID</th>
                           <th>Name</th>
                           <th>Section</th>
@@ -211,7 +211,9 @@
                           <th>AM Sign Out</th>
                           <th>PM Sign In</th>
                           <th>PM Sign Out</th>
+                          </tr>
                         </thead>
+
                         <tbody>
                     ';
 
@@ -256,7 +258,7 @@
                             echo '<td class="dt-center">'.$row2['am_in'].'</td>';
                         } else {
                           echo '<td class="dt-center">Absent</td>';
-                        }
+                        } //end check
 
                         //check if student has signed in
                         if (($row2['am_out'] == NULL) && (($currentTime > $am_outstart) && ($currentTime < $am_outend))) {
@@ -275,7 +277,7 @@
                             echo '<td class="dt-center">'.$row2['am_out'].'</td>';
                         } else {
                           echo '<td class="dt-center">Absent</td>';
-                        }
+                        } //end check
 
                         //check if student has signed in
                         if (($row2['pm_in'] == NULL) && (($currentTime > $pm_instart) && ($currentTime < $pm_inend))) {
@@ -294,7 +296,27 @@
                             echo '<td class="dt-center">'.$row2['pm_in'].'</td>';
                         } else {
                           echo '<td class="dt-center">Absent</td>';
-                        }
+                        } //end check
+
+                        //check if student has signed in
+                        if (($row2['pm_out'] == NULL) && (($currentTime > $pm_outstart) && ($currentTime < $pm_outend))) {
+                          echo '<td class="dt-center">';
+                          echo '<form action="inc/edit.inc.php" method="POST">
+                                  <input type="hidden" name="eId" value="'.$id.'">
+                                  <input type="hidden" name="sId" value="'.$sId.'">
+                                  <input type="hidden" name="aId" value="'.$attId.'">
+                                  <input type="hidden" name="type" value="'.$pm_out.'">
+                                  <input type="hidden" name="time" value="'.$getTime.'">
+                                  <button  class="w3-btn w3-blue w3-round" type="submit" name="new-attendance">Sign In</button>
+                                </form>';
+                          echo '</td>';
+
+                        } elseif ($row2['pm_out'] != NULL) {
+                            echo '<td class="dt-center">'.$row2['pm_out'].'</td>';
+                        } else {
+                          echo '<td class="dt-center">Absent</td>';
+                        } //end check
+
 
                       echo '</tr>';
 
@@ -305,14 +327,16 @@
                     $index++;
                   } //end loop
                 } //end resultcheck
-              } else {
+              } else { //if student
                 echo '<table class="w3-table">
                   <thead class="w3-blue">
+                  <tr>
                     <th>Date</th>
                     <th>AM Sign In</th>
                     <th>AM Sign Out</th>
                     <th>PM Sign In</th>
                     <th>PM Sign Out</th>
+                    </tr>
                   </thead>
                 <tbody>';
                 $sId = $_SESSION['uid'];
@@ -387,16 +411,16 @@
                             echo '</tr>';
 
 
-                          }
-                        }
+                          } //end print time/absent
+                        }//end check result
                       }
                     }
                   }
                 }
+                echo '</tbody></table>';
+              } //end user check
             ?>
-              </tbody>
-            </table>
-          <?php endif; //display if user != student ?>
+
 
 
 

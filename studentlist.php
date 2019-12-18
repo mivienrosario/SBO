@@ -139,46 +139,50 @@
 
             <h2 class="w3-wide">ADD NEW ATTENDANCE</h2>
             <p>Please provide the necessary information type to start monitoring the attendance.</p>
-
+            <div class="w3-container w3-white w3-left-align">
               <form class="" action="inc/insert.inc.php" method="post">
-                  <p><input class="w3-input w3-border" type="hidden" value="<?php echo $id;?>" ></p>
-                  <p> AM <input type="checkbox" class="w3-check" name="" value=""> PM <input type="checkbox" class="w3-check" name="" value=""> </p>
+                <p  class="w3-text-left">
+                  <label for="">Student ID</label>
+                  <input class="w3-input" type="text" name="sId" placeholder="###-####-#">
+                </p>
+                <p>
+                  <label for="">Last Name</label>
+                  <input class="w3-input" type="text" name="lname" placeholder="Last Name">
+                </p>
+                <p>
+                  <label for="">First Name</label>
+                  <input class="w3-input" type="text" name="fname" placeholder="First Name">
+                </p>
+                <p>
+                  <label for="">Middle Name</label>
+                  <input class="w3-input" type="text" name="mname" placeholder="Middle Name">
+                </p>
+                <p>
+                  <select class="w3-input" name="yr_sect">
+                    <?php
+                      $sql = "SELECT * FROM section;";
 
-					<div class="w3-container">
-					<div class="w3-row w3-large">
-					  <div class="w3-col s6">
-						<p><h5>AM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
-					  </div>
+                    ?>
+                  </select>
+                </p>
+                <p>
+                  <label for="">Contact Number</label>
+                  <input class="w3-input" type="text" name="num" placeholder="ex: 09123456789">
+                </p>
+                <p>
+                  <label for="">Address</label>
+                  <input class="w3-input" type="text" name="address" placeholder="Address">
+                </p>
 
-					  <div class="w3-col s6">
-						 <p><h5>AM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
-					  </div>
-					</div>
 
-					  <div class="w3-row w3-large">
-					  <div class="w3-col s6">
-						<p><h5>PM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
-					  </div>
+  		  <div class="w3-container w3-white w3-right">
+              <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
+            </div>
+            </div>
 
-					  <div class="w3-col s6">
-						 <p><h5>PM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="" value=""> </p>
-					  </div>
-					</div>
-					</div>
-		  <div class="w3-container w3-white w3-right">
-            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('subscribe').style.display='none'" name="addAttendance">Save</button>
-          </div>
-          </div>
+            </form>
+            </div>
 
-          </form>
           </div>
         </div>
 

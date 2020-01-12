@@ -50,7 +50,7 @@
 
         <!-- menu list admin/attendance officer -->
         <?php if ($_SESSION['utype'] != 4): ?>
-            <a href="users.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-users"></i>  Users </a>
+            <a href="users.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-user-graduate"></i>  Users </a>
             <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-user-graduate"></i>  Students</a>
             <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>

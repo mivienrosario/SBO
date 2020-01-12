@@ -39,18 +39,19 @@
         </div>
       </div>
       <hr>
-      <div class="w3-container">
-        <h5>Event List</h5>
-      </div>
       <!-- menu list all users -->
+      <div class="w3-container">
+        <h5>Dashboard</h5>
+      </div>
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <a href="event.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
+        <a href="summary.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-file-contract"></i></i>  Summary</a>
 
         <!-- menu list admin/attendance officer -->
         <?php if ($_SESSION['utype'] != 4): ?>
-            <a href="users.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-user-graduate"></i>  Users </a>
+            <a href="users.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-users"></i>  Users </a>
             <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-user-graduate"></i>  Students</a>
             <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
@@ -66,16 +67,15 @@
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <div class="w3-container">
         <ul class="breadcrumb">
-          <li class="breadcrumb-item"><i class="fas fa-calendar-week"></i>  Events</li>
+          <li class="breadcrumb-item"><i class="fas fa-calendar-week"></i>  Users</li>
         </ul>
       </div>
 
 
+
+
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
-        <!-- Header -->
-        <header class="w3-container" style="padding-top:22px">
-          <h1>Events List</h1>
-        </header> <!-- Header -->
+          <hr>
         <!--
         <h2 class="w3-text-grey w3-padding-16"><i class="fas fa-list fa-fw w3-margin-right w3-xxlarge w3-text-blue"></i>Events List</h2> -->
 
@@ -86,27 +86,46 @@
           </div>
         <?php endif; ?>
 
+        <table class="display" id="userDT">
+            <thead>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Username</th>
+                <th>User Type</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
         <?php
-          $sql = "SELECT * FROM sbo.events";
+          $sql = "SELECT
+                    u.stud_id,
+                    u.type_id,
+                    u.username,
+                    concat(s.last_name, ', ', s.first_name) as name,
+                    ut.type_desc
+                    FROM sbo.user u
+                    JOIN user_type ut ON u.type_id = ut.type_id
+                    JOIN student s ON u.stud_id = s.student_id";
           $result = mysqli_query($conn, $sql);
           $resultCheck = mysqli_num_rows($result);
           if ($resultCheck > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
-              $start = date('M d Y', strtotime($row['start_date']));
-              $end = date('M d Y', strtotime($row['end_date']));
-              $title = $row['title'];
-              $desc = $row['description'];
-              $id = $row['event_id'];
-
-              echo '<div class="w3-container">';
-              echo '<h5 class="w3-opacity w3-text-blue"><b><a style="text-decoration: none;" href="eventdetails.php?id='. $id .'">'; echo $title; echo '</a></b></h5>';
-              echo '<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>'; echo $start . ' - ' . $end . '</h6>';
-              echo '<p>' . $desc . '</p>';
-              echo '</div>';
+                ?>
+                <tr>
+                    <td><?php echo $row['stud_id']; ?></td>
+                    <td><?php echo $row['name']; ?></td>
+                    <td><?php echo $row['username']; ?></td>
+                    <td><?php echo $row['type_desc']; ?></td>
+                    <td>
+                        <button class="w3-btn w3-blue w3-round">Edit Role</button>
+                        <button class="w3-btn w3-blue w3-round">Edit Profile</button>
+                    </td>
+                </tr>
+                <?php
             }
           }
         ?>
-
+            </tbody>
+        </table>
       </div>
 
 
@@ -135,9 +154,14 @@
       <!-- modal -->
 
     </div> <!-- !PAGE CONTENT! -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 
   <script>
+  $(document).ready( function () {
+    $('#userDT').DataTable();
+  } );
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");
 

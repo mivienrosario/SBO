@@ -83,47 +83,86 @@ session_start();
 
   //insert attendance, insert student attendance
   if (isset($_POST['add-attendance'])) {
-    /*
-    $inStartPM = date('H:i', strtotime($_POST['inStartPM']));
-    $inEndPM = date('H:i', strtotime()$_POST['inEndPM']);
-    $outStartPM = date('H:i', strtotime()$_POST['outStartPM']);
-    $outEndPM = date('H:i', strtotime()$_POST['outEndPM']); */
-    $date = date('Y-m-d', strtotime($_POST['setDate']));
-    //$type = $_POST['type'];
+
+    $setDate = date('Y-m-d', strtotime($_POST['setDate']));
+
     $evId = $_POST['eventId'];
-    //$start = date('H:i', strtotime($_POST['start']));
-    //$end = date('H:i', strtotime($_POST['end']));
+
     if (isset($_POST['setAM'])) {
+
       $inStartAM = date('H:i', strtotime($_POST['inStartAM']));
+
       $inEndAM = date('H:i', strtotime($_POST['inEndAM']));
+
       $outStartAM = date('H:i', strtotime($_POST['outStartAM']));
+
       $outEndAM = date('H:i', strtotime($_POST['outEndAM']));
+
     } else {
+
       $inStartAM = 'N/A';
+
       $inEndAM  = 'N/A';
+
       $outStartAM = 'N/A';
+
       $outEndAM = 'N/A';
+
     }
 
     if (isset($_POST['setPM'])) {
+
       $inStartPM = date('H:i', strtotime($_POST['inStartPM']));
+
       $inEndPM = date('H:i', strtotime($_POST['inEndPM']));
+
       $outStartPM = date('H:i', strtotime($_POST['outStartPM']));
+
       $outEndPM = date('H:i', strtotime($_POST['outEndPM']));
+
     } else {
+
       $inStartPM = 'N/A';
+
       $inEndPM  = 'N/A';
+
       $outStartPM = 'N/A';
+
       $outEndPM = 'N/A';
+
     }
 
-    $sql = "INSERT INTO sbo.attendance(date, event_id, am_in_start, am_in_end, am_out_start, am_out_end, pm_instart, pm_inend, pm_outstart, pm_outend) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    $sql = "INSERT INTO
+                sbo.attendance(
+                    date,
+                    event_id,
+                    am_in_start,
+                    am_in_end,
+                    am_out_start,
+                    am_out_end,
+                    pm_instart,
+                    pm_inend,
+                    pm_outstart,
+                    pm_outend)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
-      header("Location: ../eventdetails.php?error=sql");
+      header("Location: ../eventdetails.php?id=$evId&error=sql");
       exit();
     } else {
-      mysqli_stmt_bind_param($stmt, "ssssssssss", $date, $evId, $inStartAM, $inEndAM, $outStartAM, $outEndAM, $inStartPM, $inEndPM, $outStartPM, $outEndPM);
+      mysqli_stmt_bind_param(
+          $stmt,
+          "ssssssssss",
+          $setDate,
+          $evId,
+          $inStartAM,
+          $inEndAM,
+          $outStartAM,
+          $outEndAM,
+          $inStartPM,
+          $inEndPM,
+          $outStartPM,
+          $outEndPM);
       echo mysqli_error($conn);
       mysqli_stmt_execute($stmt);
       mysqli_stmt_store_result($stmt);

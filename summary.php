@@ -1,5 +1,19 @@
 <?php
   require 'inc/db.inc.php';
+  $studentTable = '<table class="w3-table">
+    <thead class="w3-blue">
+    <tr>
+        <th>Event Title</th>
+      <th>Date</th>
+      <th>AM Sign In</th>
+      <th>AM Sign Out</th>
+      <th>PM Sign In</th>
+      <th>PM Sign Out</th>
+      <th>Count of Absences</th>
+      <th>CS Hours</th>
+      </tr>
+    </thead>
+  <tbody class="w3-white">';
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -45,12 +59,12 @@
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <a href="event.php" class="w3-bar-item w3-button w3-padding "><i class="fas fa-calendar-week"></i>  Events</a>
-        <a href="surveylist.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-poll"></i>  Surveys</a>
-        <a href="summary.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-file-contract"></i></i>  Summary</a>
+        <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
+        <a href="summary.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-file-contract"></i></i>  Summary</a>
         <?php if ($_SESSION['utype'] != 4): ?>
             <a href="users.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-users"></i>  Users </a>
-        <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-user-graduate"></i>  Students</a>
-        <a href="section.php" class="w3-bar-item w3-button w3-padding "><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+            <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-user-graduate"></i>  Students</a>
+            <a href="section.php" class="w3-bar-item w3-button w3-padding "><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
@@ -63,65 +77,102 @@
     <div class="w3-main" style="margin-left:300px;margin-top:43px;">
       <div class="w3-container">
 		    <ul class="breadcrumb">
-			    <li class="breadcrumb-item"><i class="fas fa-poll"></i>  Surveys</li>
+			    <li class="breadcrumb-item"><i class="fas fa-file-contract"></i></i>  Summary</li>
         </ul>
       </div>
 
-
-
       <!-- content here -->
-
-
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
         <!-- Header -->
         <header class="w3-container" style="padding-top:22px">
-          <h1>Survey List</h1>
         </header> <!-- Header -->
         <div class="w3-container">
-          <!--
-            check if user != student
-            display attendance table
-          -->
-          <?php if ($_SESSION['utype'] != 4&3): ?>
-            <div class="w3-col w3-right-align">
-              <button onclick="document.getElementById('subscribe').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round" style="margin-bottom: 0.5em;"><i class="fas fa-plus"></i>   New Survey</button>
-            </div>
+          <!-- check if user != student display attendance table -->
+          <?php if ($_SESSION['utype'] != 4): ?>
+
           <?php endif; ?>
 
           <!-- student table -->
-          <table id="table" class="display">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Event</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
               <?php
-                $sql = "SELECT * FROM sbo.survey s
-                          JOIN sbo.events e
-                            ON s.eventid = e.event_id;
-                      ";
-                $result = mysqli_query($conn, $sql);
-                $resultCheck = mysqli_num_rows($result);
+              //if student
+              $totalAbsent = 0;
+              $totalAttendance = 0;
+               echo $studentTable;
+               $sId = $_SESSION['uid'];
+               $stSql2 = "SELECT * FROM sbo.get_attendance_st g
+	                            JOIN sbo.events e
+		                        on e.event_id = g.event_id
+                             WHERE student_id = ? ORDER BY date DESC";
+               $stStmt2 = mysqli_stmt_init($conn);
+               if (!mysqli_stmt_prepare($stStmt2, $stSql2)) {
+                 header("Location: test_section.php?error=sql");
+                 exit();
+               } else {
+                 mysqli_stmt_bind_param($stStmt2, "s", $sId);
+                 mysqli_stmt_execute($stStmt2);
+                 $resultSt2 = mysqli_stmt_get_result($stStmt2);
+                 $resultCheckSt2 = mysqli_num_rows($resultSt2);
+                 if ($resultCheckSt2 > 0) {
+                   while ($rowSt2 = mysqli_fetch_assoc($resultSt2)) {
+                     echo '<tr>';
+                     echo '<td>' . $rowSt2['title'] . '</td>';
+                     echo '<td>'.$rowSt2['date'].'</td>';
 
-                if ($resultCheck > 0) {
-                  while ($row = mysqli_fetch_assoc($result)) {
-                    //$dateEvent = date('M d Y', strtotime($row['start_date']));
-                    echo '<tr>';
-                    echo '<td>'; echo $row['surveytitle']; echo '</td>';
-                    echo '<td>'; echo $row['title']; echo '</td>';
-                    echo '<td class="w3-center">';
-                    ?>
-                    <?php if ($_SESSION['utype'] != 4&3): ?>
-                      <button onclick="document.getElementById('editSurvey').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round"><i class="fas fa-edit"></i>   Edit</button>
-                    <?php endif; ?>
-                    <?php
-                    echo '<a href="surveydetails.php?id='.$row['surveyid'].'" style="text-decoration: none;"><button class="w3-btn w3-blue w3-round"><i class="fas fa-eye"></i>   View</a></button></td>';
-                    echo '</tr>';
-                  }
-                }
+                     if ($rowSt2['am_in'] == NULL) {
+                       echo '<td>ABSENT</td>';
+                       $totalAttendance += 1;
+                       $totalAbsent += 1;
+                     } else {
+                       echo $rowSt2['am_in'];
+                     }
+
+                     if ($rowSt2['am_out'] == NULL) {
+                       echo '<td>ABSENT</td>';
+                       $totalAttendance += 1;
+                       $totalAbsent += 1;
+                     } else {
+                       echo $rowSt2['am_out'];
+                     }
+
+                     if ($rowSt2['pm_in'] == NULL) {
+                       echo '<td>ABSENT</td>';
+                       $totalAttendance += 1;
+                       $totalAbsent += 1;
+                     } else {
+                       echo $rowSt2['pm_in'];
+                     }
+
+                     if ($rowSt2['pm_out'] == NULL) {
+                       echo '<td>ABSENT</td>';
+                       $totalAttendance += 1;
+                       $totalAbsent += 1;
+                     } else {
+                       echo $rowSt2['pm_out'];
+                     }
+
+                     echo '<td>';
+                     echo $totalAttendance;
+                     echo '</td>';
+
+                     echo '</tr>';
+                     $totalAttendance = 0;
+
+                   } //end print time/absent
+                 }//end check result
+               }
+               ?>
+                 <tr>
+                     <td>TOTAL</td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td><?php echo $totalAbsent; ?></td>
+                     <td></td>
+                 </tr>
+               <?php
+               echo '</tbody></table>';
               ?>
             </tbody>
           </table> <!-- student table -->
@@ -131,6 +182,7 @@
       <?php if ($_SESSION['utype'] != 4): ?>
         <!-- modal -->
 
+        <!-- modal -->
       <?php endif; ?>
 
 

@@ -70,6 +70,10 @@
     <link rel="stylesheet" href="src/css/breadcrumb.css">
     <link rel="stylesheet" href="src/css/body.css">
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
+
+    <!-- jQuery lib -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
   </head>
 
   <body class="w3-ios-background">
@@ -102,9 +106,10 @@
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
         <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
+        <a href="summary.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-file-contract"></i></i>  Summary</a>
         <?php if ($_SESSION['utype'] != 4): ?>
-            <a href="users.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-user-graduate"></i>  Users </a>
-            <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
+            <a href="users.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-users"></i>  Users </a>
+            <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-user-graduate"></i>  Students</a>
             <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
@@ -189,7 +194,7 @@
                             ON sa.att_id = a.attendance_id
                           JOIN sbo.events e
                             ON a.event_id = e.event_id
-                          where a.event_id = $id;";
+                          where a.event_id = $id ORDER BY date DESC ";
                 $result = mysqli_query($conn, $sql);
                 $resultCheck = mysqli_num_rows($result);
                 if ($resultCheck > 0) {
@@ -201,7 +206,7 @@
                     $result2 = mysqli_query($conn, $sql2);
                     $resultCheck2 = mysqli_num_rows($result2);
 
-                    echo '<h2>' . date('Y F n', strtotime($date)). '</h2>';
+                    echo '<h2>' . date('Y-m-d', strtotime($date)). '</h2>';
                     echo '<table id="'; echo $table[$index]; echo '" class="display">';
                     echo $officerTable;
 
@@ -332,86 +337,85 @@
                   } //end loop
                 } //end resultcheck
               } else { //if student
+                $totalAbsent = 0;
                 echo $studentTable;
                 $sId = $_SESSION['uid'];
-                $stSql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
-                          JOIN sbo.attendance a
-                            ON sa.att_id = a.attendance_id
-                          JOIN sbo.events e
-                            ON a.event_id = e.event_id
-                          where a.event_id = ?;";
+                $stSql = "SELECT DISTINCT
+                            sa.student_id,
+                            a.date,
+                            sa.am_in,
+                            sa.am_out,
+                            sa.pm_in,
+                            sa.pm_out
+                            FROM sbo.student_attendance sa
+                            JOIN sbo.attendance a
+                                ON sa.att_id = a.attendance_id
+                            JOIN sbo.events e
+                                ON a.event_id = e.event_id
+                          where a.event_id = ? AND sa.student_id = ? ORDER BY a.date DESC";
                 $stStmt = mysqli_stmt_init($conn);
                 if (!mysqli_stmt_prepare($stStmt, $stSql)) {
-                  header("Location: test_event_details.php?error=sql");
+                  header("Location: eventdetails.php?id=$id&error=sql");
                   exit();
                 } else {
-                  mysqli_stmt_bind_param($stStmt, "s", $id);
+                  mysqli_stmt_bind_param($stStmt, "ss", $id, $sId);
                   mysqli_stmt_execute($stStmt);
                   $resultSt = mysqli_stmt_get_result($stStmt);
                   $resultCheckSt = mysqli_num_rows($resultSt);
                   if($resultCheckSt > 0) {
                     while ($rowSt = mysqli_fetch_assoc($resultSt)) {
                       $date = $rowSt['date'];
+                      echo '<tr>';
+                      echo '<td>' . $date . '</td>';
 
-                      $stSql2 = "SELECT * FROM sbo.get_attendance_st
-                                    WHERE event_id = ? AND student_id = ?";
-                      $stStmt2 = mysqli_stmt_init($conn);
-                      if (!mysqli_stmt_prepare($stStmt2, $stSql2)) {
-                        header("Location: test_section.php?error=sql");
-                        exit();
+                      if ($rowSt['am_in'] == NULL) {
+                        echo '<td>ABSENT</td>';
+                        $totalAttendance += 1;
+                        $totalAbsent += 1;
                       } else {
-                        mysqli_stmt_bind_param($stStmt2, "ss", $id, $sId);
-                        mysqli_stmt_execute($stStmt2);
-                        $resultSt2 = mysqli_stmt_get_result($stStmt2);
-                        $resultCheckSt2 = mysqli_num_rows($resultSt2);
-                        if ($resultCheckSt2 > 0) {
-                          // code...
-                          while ($rowSt2 = mysqli_fetch_assoc($resultSt2)) {
-                            // code...
-                            echo '<tr>
-                              <td>'.$rowSt2['date'].'</td>';
-
-                            if ($rowSt2['am_in'] == NULL) {
-                              echo '<td>ABSENT</td>';
-                              $totalAttendance += 1;
-                            } else {
-                              echo $rowSt2['am_in'];
-                            }
-
-                            if ($rowSt2['am_out'] == NULL) {
-                              echo '<td>ABSENT</td>';
-                              $totalAttendance += 1;
-                            } else {
-                              echo $rowSt2['am_out'];
-                            }
-
-                            if ($rowSt2['pm_in'] == NULL) {
-                              echo '<td>ABSENT</td>';
-                              $totalAttendance += 1;
-                            } else {
-                              echo $rowSt2['pm_in'];
-                            }
-
-                            if ($rowSt2['pm_out'] == NULL) {
-                              echo '<td>ABSENT</td>';
-                              $totalAttendance += 1;
-                            } else {
-                              echo $rowSt2['pm_out'];
-                            }
-
-                            echo '<td>';
-                            echo $totalAttendance;
-                            echo '</td>';
-
-                            echo '</tr>';
-                            $totalAttendance = 0;
-
-                          } //end print time/absent
-                        }//end check result
+                        echo $rowSt2['am_in'];
                       }
+
+                      if ($rowSt['am_out'] == NULL) {
+                        echo '<td>ABSENT</td>';
+                        $totalAttendance += 1;
+                        $totalAbsent += 1;
+                      } else {
+                        echo $rowSt2['am_out'];
+                      }
+
+                      if ($rowSt['pm_in'] == NULL) {
+                        echo '<td>ABSENT</td>';
+                        $totalAttendance += 1;
+                        $totalAbsent += 1;
+                      } else {
+                        echo $rowSt2['pm_in'];
+                      }
+
+                      if ($rowSt['pm_out'] == NULL) {
+                        echo '<td>ABSENT</td>';
+                        $totalAttendance += 1;
+                        $totalAbsent += 1;
+                      } else {
+                        echo $rowSt2['pm_out'];
+                      }
+
+                      echo '<td>' . $totalAttendance . '</td>';
+                      echo '</tr>';
+                      $totalAttendance = 0;
                     }
                   }
                 }
+                ?>
+                  <tr>
+                      <td>TOTAL</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td><?php echo $totalAbsent; ?></td>
+                  </tr>
+                <?php
                 echo '</tbody></table>';
               } //end user check
             ?>
@@ -435,43 +439,108 @@
 
               <form class="" action="inc/insert.inc.php" method="post">
 
-                  <p><input class="w3-input w3-border" type="hidden" name="eventId" value="<?php echo $id;?>" ></p>
-                  <p>Select Date <input type="date" name="setDate">
+                  <p>
+                      <input
+                        class="w3-input w3-border"
+                        type="hidden"
+                        name="eventId"
+                        value="<?php echo $id;?>" >
                   </p>
-                  <p> AM <input type="checkbox" class="w3-check" name="setAM"> PM <input type="checkbox" class="w3-check" name="setPM"> </p>
+                  <p>
+                      Select Date
+                      <input type="date" name="setDate">
+                  </p>
+                  <p>
+                      AM
+                      <input type="checkbox" class="w3-check" name="setAM">
+                      PM
+                      <input type="checkbox" class="w3-check" name="setPM"> </p>
 
 					<div class="w3-container">
 					<div class="w3-row w3-large">
 					  <div class="w3-col s6">
 						<p><h5>AM Sign In</h5></p>
-						<p> Start <input class="w3-input w3-border" type="time" name="inStartAM" value=""> </p>
-						<p> End <input class="w3-input w3-border" type="time" name="inEndAM" value=""> </p>
+						<p>
+                            Start
+                           <select class="w3-input w3-border" name="inStartAM">
+                               <option value="07:30:00">07:30 AM</option>
+                               <option value="08:00:00">08:00 AM</option>
+                           </select>
+                        </p>
+						<p>
+                            End
+                            <select class="w3-input w3-border" name="inEndAM">
+                                <option value="08:00:00">08:00 AM</option>
+                                <option value="08:30:00">08:30 AM</option>
+                            </select>
+                        </p>
 					  </div>
 
 					  <div class="w3-col s6">
 						 <p><h5>AM Sign Out</h5></p>
-						 <p> Start <input class="w3-input w3-border" type="time" name="outStartAM" value=""> </p>
-						 <p> End <input class="w3-input w3-border" type="time" name="outEndAM" value=""> </p>
+						 <p>
+                             Start
+                            <select class="w3-input w3-border" name="outStartAM">
+                                <option value="11:00:00">11:00 AM</option>
+                                <option value="11:30:00">11:30 AM</option>
+                            </select>
+                         </p>
+						 <p>
+                             End
+                             <select class="w3-input w3-border" name="outEndAM">
+                                 <option value="12:00:00">12:00 PM</option>
+                                 <option value="12:30:00">12:30 PM</option>
+                             </select>
+                         </p>
 					  </div>
 					</div>
 
 					  <div class="w3-row w3-large">
-  					  <div class="w3-col s6">
-  						<p><h5>PM Sign In</h5></p>
-  						<p> Start <input class="w3-input w3-border" type="time" name="inStartPM" value=""> </p>
-  						<p> End <input class="w3-input w3-border" type="time" name="inEndPM" value=""> </p>
-  					  </div>
+      					  <div class="w3-col s6">
+      						<p><h5>PM Sign In</h5></p>
+                            <p>
+                                Start
+                               <select class="w3-input w3-border" name="inStartPM">
+                                   <option value="13:00:00">01:00 PM</option>
+                                   <option value="13:30:00">01:30 PM</option>
+                               </select>
+                            </p>
+   						    <p>
+                                End
+                                <select class="w3-input w3-border" name="inEndPM">
+                                    <option value="13:30:00">01:30 PM</option>
+                                    <option value="14:00:00">02:00 PM</option>
+                                </select>
+                            </p>
+      					  </div>
 
-  					  <div class="w3-col s6">
-  						 <p><h5>PM Sign Out</h5></p>
-  						 <p> Start <input class="w3-input w3-border" type="time" name="outStartPM" value=""> </p>
-  						 <p> End <input class="w3-input w3-border" type="time" name="outEndPM" value=""> </p>
-  					  </div>
+      					  <div class="w3-col s6">
+      						 <p><h5>PM Sign Out</h5></p>
+                             <p>
+                                 Start
+                                <select class="w3-input w3-border" name="outStartPM">
+                                    <option value="16:00:00">04:00 PM</option>
+                                    <option value="16:30:00">04:30 PM</option>
+
+                                </select>
+                             </p>
+    						 <p>
+                                 End
+                                 <select class="w3-input w3-border" name="outEndPM">
+                                     <option value="16:30:00">04:30 PM</option>
+                                     <option value="17:00:00">05:00 PM</option>
+                                 </select>
+                             </p>
+      					  </div>
 					  </div>
 
 					</div>
 		       <div class="w3-container w3-white w3-right">
-            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('addAttendance').style.display='none'" name="add-attendance">Save</button>
+            <button type="submit"
+                class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round" onclick="document.getElementById('addAttendance').style.display='none'"
+                name="add-attendance">
+                Save
+            </button>
           </div>
           </form>
           </div>
@@ -488,13 +557,50 @@
             <p>Please update the appropriate information type to edit the event details.</p>
             <form class="" action="inc/edit.inc.php" method="post">
               <input type="hidden" name="id" value="<?php echo $id;?>">
-  				    <p>Event Title <input type="text" class="w3-input w3-border" name="title" value="<?php echo $title;?>"></p>
-  				    <p>Description <textarea rows="2" col="40" class="w3-input" name="description" value="<?php echo $desc;?>"><?php echo $desc;?></textarea></p>
-  				    <p>Start Date <input type="date" class="w3-input w3-border" name="start" value="<?php echo date('Y-m-d', strtotime($dateSt));?>"></p>
-  				    <p>End Date <input type="date" class="w3-input w3-border" name="end" value="<?php echo date('Y-m-d', strtotime($dateEnd));?>"></p>
+  				    <p>
+                        Event Title
+                        <input
+                            type="text"
+                            class="w3-input w3-border"
+                            name="title"
+                            value="<?php echo $title;?>">
+                    </p>
+  				    <p>
+                        Description
+                        <textarea
+                            rows="2"
+                            col="40"
+                            class="w3-input"
+                            name="description"
+                            value="<?php echo $desc;?>">
+                            <?php echo $desc;?>
+                        </textarea>
+                    </p>
+  				    <p>
+                        Start Date
+                        <input
+                            type="date"
+                            class="w3-input w3-border"
+                            name="start"
+                            value="<?php echo date('Y-m-d', strtotime($dateSt));?>">
+                    </p>
+  				    <p>
+                        End Date
+                        <input
+                            type="date"
+                            class="w3-input w3-border"
+                            name="end"
+                            value="<?php echo date('Y-m-d', strtotime($dateEnd));?>">
+                    </p>
 
           <div class="w3-container w3-white w3-right">
-            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round " onclick="document.getElementById('editEvent').style.display='none'" name="edit-event">Save</button>
+            <button
+                type="submit"
+                class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round "
+                onclick="document.getElementById('editEvent').style.display='none'"
+                name="edit-event">
+                Save
+            </button>
           </div>
         </form>
           </div>
@@ -514,7 +620,13 @@
   				    <p>Survey Title <input type="text" class="w3-input w3-border" name="title"></p>
 
           <div class="w3-container w3-white w3-right">
-            <button type="submit" class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round " onclick="document.getElementById('addSurvey').style.display='none'" name="add-survey">Save</button>
+            <button
+                type="submit"
+                class="w3-button w3-padding-large w3-blue w3-margin-bottom w3-round "
+                onclick="document.getElementById('addSurvey').style.display='none'"
+                name="add-survey">
+                Save
+            </button>
           </div>
         </form>
           </div>
@@ -534,7 +646,6 @@
    <!-- !PAGE CONTENT! -->
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
   <script>
@@ -568,6 +679,10 @@
     $(document).ready( function () {
       $('#table10').DataTable();
     } );
+
+
+
+
     // Get the Sidebar
     var mySidebar = document.getElementById("mySidebar");
 
@@ -591,6 +706,5 @@
       overlayBg.style.display = "none";
     }
   </script>
-
   </body>
 </html>

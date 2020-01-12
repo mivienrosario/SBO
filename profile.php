@@ -37,18 +37,15 @@
       }
 
         $sql = "SELECT
-                    UPPER(CONCAT(s.last_name, ', ', s.first_name, ' ', LEFT(s.middle_name, 1), '.')) as name,
+                	UPPER(CONCAT(s.last_name, ', ', s.first_name, ' ', LEFT(s.middle_name, 1), '.')) as name,
                     s.student_id,
-                    CONCAT(ss.year, ss.section) as yr_sect,
                     s.address,
                     s.contact_num,
-                    ut.type_desc,
-                    u.username
+                    CONCAT(ss.year, ss.section) as yr_sect
                 FROM student s
-                JOIN section ss ON s.section_id = ss.section_id
-                JOIN user u ON u.stud_id = s.student_id
-                JOIN user_type ut ON u.type_id = ut.type_id
-                WHERE student_id = '$id'";
+                JOIN section ss
+                	ON s.section_id = ss.section_id
+                WHERE s.student_id = '$id'";
         $result = mysqli_query($conn, $sql);
         $resultCheck = mysqli_num_rows($result);
         if ($resultCheck > 0) {
@@ -58,7 +55,6 @@
             $section = $row['yr_sect'];
             $address = $row['address'];
             $num = $row['contact_num'];
-            $user = $row['username'];
           }
         }
     ?>

@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
     <link rel="stylesheet" href="src/css/breadcrumb.css">
     <link rel="stylesheet" href="src/css/body.css">
-
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
 
   </head>
@@ -43,14 +42,17 @@
       <div class="w3-container">
         <h5>Event List</h5>
       </div>
+      <!-- menu list all users -->
       <div class="w3-bar-block">
         <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-        <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i>  Events</a>
+        <a href="event.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
+
+        <!-- menu list admin/attendance officer -->
         <?php if ($_SESSION['utype'] != 4): ?>
-            <a href="users.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-users"></i>  Users </a>
-        <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
-        <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+            <a href="users.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-users"></i>  Users </a>
+            <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-user-graduate"></i>  Students</a>
+            <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
 
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>

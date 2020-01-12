@@ -1,4 +1,5 @@
 <?php
+    use inc\Controller\Events\getRangeOfDate;
   require_once 'inc/db.inc.php';
   $id = NULL;
   if (!isset($_GET)) {
@@ -26,6 +27,34 @@
     $currentTime = strtotime(date('H:i'));
     $getTime = date("H:i");
   }
+
+  $officerTable = '<thead>
+                          <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Section</th>
+                            <th>AM Sign In</th>
+                            <th>AM Sign Out</th>
+                            <th>PM Sign In</th>
+                            <th>PM Sign Out</th>
+                            <th>Count of Absences</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>';
+
+    $studentTable = '<table class="w3-table">
+      <thead class="w3-blue">
+      <tr>
+        <th>Date</th>
+        <th>AM Sign In</th>
+        <th>AM Sign Out</th>
+        <th>PM Sign In</th>
+        <th>PM Sign Out</th>
+        <th>Count of Absences</th>
+        </tr>
+      </thead>
+    <tbody class="w3-white">';
 ?>
 <!DOCTYPE html>
 
@@ -39,16 +68,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
     <link rel="stylesheet" href="src/css/breadcrumb.css">
+    <link rel="stylesheet" href="src/css/body.css">
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
-    <style>
-      html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-      hr {
-        border: 0;
-        height: 1px;
-        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-      }
-    </style>
   </head>
+
   <body class="w3-ios-background">
     <?php
       include 'header.php';
@@ -80,8 +103,9 @@
         <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
         <?php if ($_SESSION['utype'] != 4): ?>
-        <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
-        <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
+            <a href="users.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-users"></i>  Users </a>
+            <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
+            <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
         <a href="inc/logout.inc.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-sign-out-alt fa-fw"></i>  Logout</a><br><br>
       </div>
@@ -125,6 +149,14 @@
             <td class="w3-large">Description</td>
             <td><?php echo $desc; ?></td>
           </tr>
+          <tr>
+            <td class="w3-large">Start Date</td>
+            <td><?php echo $dateSt; ?></td>
+          </tr>
+          <tr>
+            <td class="w3-large">End Date</td>
+            <td><?php echo $dateEnd; ?></td>
+          </tr>
         </table>
 
         <!-- Header -->
@@ -147,6 +179,7 @@
             display attendance table
           -->
             <?php
+                $totalAttendance = 0;
               if ($_SESSION['utype'] != 4) { //if not student
                 $table = array("table1", "table2", "table3", "table4", "table5");
                 $index = 0;
@@ -163,54 +196,14 @@
                   while ($row = mysqli_fetch_assoc($result)) {
 
                     $date = $row['date'];
-                    $sql2 = "SELECT
-                                  concat(s.last_name, ', ', s.first_name) as name,
-                                  concat(se.year, se.section) as year_section,
-                                  sa.am_in,
-                                  sa.am_out,
-                                  sa.pm_in,
-                                  sa.pm_out,
-                                  a.event_id,
-                                  a.date,
-                                  a.attendance_id,
-                                  a.am_in_start,
-                                  a.am_in_end,
-                                  a.am_out_start,
-                                  a.am_out_end,
-                                  a.pm_instart,
-                                  a.pm_inend,
-                                  a.pm_outstart,
-                                  a.pm_outend,
-                                  s.student_id
-                                FROM sbo.student_attendance sa
-                                  join student s
-                                    on sa.student_id = s.student_id
-                                  join attendance a
-                                    on sa.att_id = a.attendance_id
-                                  join events e
-                                    on a.event_id = e.event_id
-                                  join section se
-                                    on se.section_id = s.section_id
-                            WHERE a.event_id = $id AND a.date = '$date';";
+                    $sql2 = "SELECT * FROM sbo.get_attendance WHERE event_id = $id AND date = '$date'";
 
                     $result2 = mysqli_query($conn, $sql2);
                     $resultCheck2 = mysqli_num_rows($result2);
-                    echo '<h2>' . date('Y F n', strtotime($date)). '</h2>';
-                    echo '<table id="'; echo $table[$index]; echo '" class="display">
-                        <thead>
-                        <tr>
-                          <th>Student ID</th>
-                          <th>Name</th>
-                          <th>Section</th>
-                          <th>AM Sign In</th>
-                          <th>AM Sign Out</th>
-                          <th>PM Sign In</th>
-                          <th>PM Sign Out</th>
-                          </tr>
-                        </thead>
 
-                        <tbody>
-                    ';
+                    echo '<h2>' . date('Y F n', strtotime($date)). '</h2>';
+                    echo '<table id="'; echo $table[$index]; echo '" class="display">';
+                    echo $officerTable;
 
                     if ($resultCheck2 > 0) {
                       while ($row2 = mysqli_fetch_assoc($result2)) {
@@ -231,7 +224,6 @@
                         $am_out = 'am_out';
                         $pm_in = 'pm_in';
                         $pm_out = 'pm_out';
-
                         echo '<tr>';
                         echo '<td>' . $sId . '</td>';
                         echo '<td>' . $name . '</td>';
@@ -255,6 +247,7 @@
                             echo '<td class="dt-center">N/A</td>';
                         } else {
                           echo '<td class="dt-center">Absent</td>';
+                          $totalAttendance += 1;
                         } //end check
 
                         //check if student has signed in
@@ -276,6 +269,7 @@
                             echo '<td class="dt-center">N/A</td>';
                         }  else {
                           echo '<td class="dt-center">Absent</td>';
+                          $totalAttendance += 1;
                         } //end check
 
                         //check if student has signed in
@@ -297,6 +291,7 @@
                             echo '<td class="dt-center">N/A</td>';
                         }  else {
                             echo '<td class="dt-center">Absent</td>';
+                            $totalAttendance += 1;
                         } //end check
 
                         //check if student has signed in
@@ -318,30 +313,26 @@
                             echo '<td class="dt-center">N/A</td>';
                         }  else {
                           echo '<td class="dt-center">Absent</td>';
+                          $totalAttendance += 1;
                         } //end check
 
+                        echo '<td>';
+                        echo $totalAttendance;
+                        echo '</td>';
 
                       echo '</tr>';
 
+                      $totalAttendance = 0;
                       } //end loop
                     } //end resultcheck
                     echo '</tbody></table>';
                     echo '<br>';
                     $index++;
+
                   } //end loop
                 } //end resultcheck
               } else { //if student
-                echo '<table class="w3-table">
-                  <thead class="w3-blue">
-                  <tr>
-                    <th>Date</th>
-                    <th>AM Sign In</th>
-                    <th>AM Sign Out</th>
-                    <th>PM Sign In</th>
-                    <th>PM Sign Out</th>
-                    </tr>
-                  </thead>
-                <tbody class="w3-white">';
+                echo $studentTable;
                 $sId = $_SESSION['uid'];
                 $stSql = "SELECT DISTINCT a.date FROM sbo.student_attendance sa
                           JOIN sbo.attendance a
@@ -361,24 +352,9 @@
                   if($resultCheckSt > 0) {
                     while ($rowSt = mysqli_fetch_assoc($resultSt)) {
                       $date = $rowSt['date'];
-                      $stSql2 = "SELECT
-                                    a.date,
-                                    a.am_in_start,
-                                    a.am_in_end,
-                                    a.am_out_start,
-                                    a.am_out_end,
-                                    a.pm_instart,
-                                    a.pm_inend,
-                                    a.pm_outstart,
-                                    a.pm_outend,
-                                    sa.am_in,
-                                    sa.am_out,
-                                    sa.pm_in,
-                                    sa.pm_out
-                                  FROM student_attendance sa
-	                                JOIN attendance a
-		                                 ON a.attendance_id = sa.att_id
-	                                WHERE a.event_id = ? AND sa.student_id = ?;";
+
+                      $stSql2 = "SELECT * FROM sbo.get_attendance_st
+                                    WHERE event_id = ? AND student_id = ?";
                       $stStmt2 = mysqli_stmt_init($conn);
                       if (!mysqli_stmt_prepare($stStmt2, $stSql2)) {
                         header("Location: test_section.php?error=sql");
@@ -397,30 +373,38 @@
 
                             if ($rowSt2['am_in'] == NULL) {
                               echo '<td>ABSENT</td>';
+                              $totalAttendance += 1;
                             } else {
                               echo $rowSt2['am_in'];
                             }
 
                             if ($rowSt2['am_out'] == NULL) {
                               echo '<td>ABSENT</td>';
+                              $totalAttendance += 1;
                             } else {
                               echo $rowSt2['am_out'];
                             }
 
                             if ($rowSt2['pm_in'] == NULL) {
                               echo '<td>ABSENT</td>';
+                              $totalAttendance += 1;
                             } else {
                               echo $rowSt2['pm_in'];
                             }
 
                             if ($rowSt2['pm_out'] == NULL) {
                               echo '<td>ABSENT</td>';
+                              $totalAttendance += 1;
                             } else {
                               echo $rowSt2['pm_out'];
                             }
 
-                            echo '</tr>';
+                            echo '<td>';
+                            echo $totalAttendance;
+                            echo '</td>';
 
+                            echo '</tr>';
+                            $totalAttendance = 0;
 
                           } //end print time/absent
                         }//end check result
@@ -452,7 +436,8 @@
               <form class="" action="inc/insert.inc.php" method="post">
 
                   <p><input class="w3-input w3-border" type="hidden" name="eventId" value="<?php echo $id;?>" ></p>
-                  <p>Select Date <input class="w3-input" type="date" name="setDate" ></p>
+                  <p>Select Date <input type="date" name="setDate">
+                  </p>
                   <p> AM <input type="checkbox" class="w3-check" name="setAM"> PM <input type="checkbox" class="w3-check" name="setPM"> </p>
 
 					<div class="w3-container">

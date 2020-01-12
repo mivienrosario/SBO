@@ -17,15 +17,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
     <link rel="stylesheet" href="src/css/breadcrumb.css">
+    <link rel="stylesheet" href="src/css/body.css">
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
-    <style>
-      html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-      hr {
-        border: 0;
-        height: 1px;
-        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-      }
-    </style>
+
   </head>
   <body class="w3-ios-background">
     <?php
@@ -59,6 +53,7 @@
         <a href="event.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="survey.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-poll"></i>  Surveys</a>
         <?php if ($_SESSION['utype'] != 4): ?>
+            <a href="users.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-users"></i>  Users </a>
         <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
         <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>

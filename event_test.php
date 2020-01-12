@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <title>W3.CSS Template</title>
+    <title>Test Page</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -13,9 +13,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
     <link rel="stylesheet" href="src/css/breadcrumb.css">
     <link rel="stylesheet" href="src/css/body.css">
-
     <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
-
   </head>
   <body class="w3-light-grey">
     <?php
@@ -48,7 +46,6 @@
         <a href="event.php" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fas fa-calendar-week"></i>  Events</a>
         <a href="surveylist.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-poll"></i>  Surveys</a>
         <?php if ($_SESSION['utype'] != 4): ?>
-            <a href="users.php" class="w3-bar-item w3-button w3-padding"><i class="fas fa-users"></i>  Users </a>
         <a href="studentlist.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Students</a>
         <a href="section.php" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Sections</a>
         <?php endif; ?>
@@ -70,40 +67,46 @@
 
 
       <div class="w3-container  w3-margin-bottom" style="width: 80%; margin-left: 1em;">
-        <!-- Header -->
-        <header class="w3-container" style="padding-top:22px">
-          <h1>Events List</h1>
-        </header> <!-- Header -->
-        <!--
-        <h2 class="w3-text-grey w3-padding-16"><i class="fas fa-list fa-fw w3-margin-right w3-xxlarge w3-text-blue"></i>Events List</h2> -->
-
-        <!-- show if admin/attendance officer-->
-        <?php if (($_SESSION['utype'] == 1) || ($_SESSION['utype'] == 2)): ?>
-          <div class="w3-col w3-right-align">
-            <button onclick="document.getElementById('addEvent').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round ">Add Event</button>
+        <div class="w3-cell-row">
+          <div class="w3-container w3-cell w3-mobile w3-red" style="width: 90%;">
+            <!-- Header -->
+            <header class="w3-container">
+              <h1>Events List</h1>
+            </header> <!-- Header -->
           </div>
-        <?php endif; ?>
 
-        <?php
-          $sql = "SELECT * FROM sbo.events";
-          $result = mysqli_query($conn, $sql);
-          $resultCheck = mysqli_num_rows($result);
-          if ($resultCheck > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-              $start = date('M d Y', strtotime($row['start_date']));
-              $end = date('M d Y', strtotime($row['end_date']));
-              $title = $row['title'];
-              $desc = $row['description'];
-              $id = $row['event_id'];
+          <div class="w3-container w3-cell w3-mobile w3-green w3-cell-middle">
+            <!-- show if admin/attendance officer-->
+            <?php if (($_SESSION['utype'] == 1) || ($_SESSION['utype'] == 2)): ?>
+                <button onclick="document.getElementById('addEvent').style.display='block'" type="button" name="button" class="w3-btn w3-blue w3-round ">Add Event</button>
+            <?php endif; ?>
+          </div>
+        </div>
 
-              echo '<div class="w3-container">';
-              echo '<h5 class="w3-opacity w3-text-blue"><b><a style="text-decoration: none;" href="eventdetails.php?id='. $id .'">'; echo $title; echo '</a></b></h5>';
-              echo '<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>'; echo $start . ' - ' . $end . '</h6>';
-              echo '<p>' . $desc . '</p>';
-              echo '</div>';
-            }
-          }
-        ?>
+        <div class="w3-card">
+          <header class="w3-container"><h1>Event 1</h1></header>
+
+        </div>
+
+
+
+
+
+
+
+
+        <!--
+        <div class="w3-card-2">
+          <header class="w3-container w3-blue">
+            <h1>Header</h1>
+          </header>
+          <div class="w3-container">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+          <footer class="w3-container w3-blue">
+            <h5>footer</h5>
+          </footer>
+        </div> -->
 
       </div>
 

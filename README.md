@@ -1,6 +1,5 @@
 # SBO - Attendance and Evaluation System
-
-Project Est. 2018 - 2019
+Jan 2019 - June 2019
 
 Every semester or every school year, the University or a college department hold various events for its students as part of its extracurricular activities. Some examples of these events are foundation day, intramurals, school seminars or workshops, etc. Aside from promoting a university's campus life, it helps promote students develop dynamic personalities apart from excelling in academic endeavours. While these events are great opportunities for students to grow, not every student are willing to attend, hence, the University's "Community Service" system where absentees are required to perform community service for the campus as a consequence of not attending the said events.
 

@@ -1,22 +1,8 @@
 <?php
   require 'inc/db.inc.php';
+  include_once 'head.php';
 ?>
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <title>W3.CSS Template</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
-    <link rel="stylesheet" href="src/css/breadcrumb.css">
-    <link rel="stylesheet" href="src/css/body.css">
 
-    <script src="https://kit.fontawesome.com/e1f7070413.js" crossorigin="anonymous"></script>
-
-  </head>
   <body class="w3-light-grey">
     <?php
       include 'header.php';
@@ -86,7 +72,7 @@
         <?php endif; ?>
 
         <?php
-          $sql = "SELECT * FROM sbo.events";
+          $sql = "SELECT * FROM sbo.events ORDER BY start_date DESC";
           $result = mysqli_query($conn, $sql);
           $resultCheck = mysqli_num_rows($result);
           if ($resultCheck > 0) {
